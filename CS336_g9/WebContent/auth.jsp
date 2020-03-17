@@ -1,8 +1,12 @@
 <jsp:include page="header.jsp"/>
 
+
+<!-- Login Form -->
+
+
 <div class="auth" id="login">
 	<div class="col-sm-8 col-md-4">
-		<form class="needs-validation" novalidate>
+		<form action="Auth" method="get" class="needs-validation" novalidate>
     		<label for="login_userName" class="col-form-label">User Name</label>
       		<input type="text" class="form-control" id="login_userName" placeholder="John Doe" required>
       			<div class="invalid-feedback">
@@ -24,64 +28,74 @@
 	</div>
 </div>
 
-<div class="auth hide" id="register">
-<div class="col-sm-8 col-md-4" >
 
-<form class="needs-validation" novalidate>
+
+<!-- Register Form -->
+
+<div class="auth hide" id="register">
+	<div class="col-sm-8 col-md-4" >
+
+<form action="Auth" method="post" class="needs-validation" novalidate>
   
       <label for="firstName">First Name</label>
-      <input type="text" class="form-control" id="firstName" placeholder="First name" required>
+      <input type="text" name="ufirstName" class="form-control" id="firstName" placeholder="First name" required>
       <div class="invalid-feedback">
           Please enter your first name!
       </div>
     
       <label for="lastName">Last name</label>
-      <input type="text" class="form-control" id="lastName" placeholder="Last name" required>
+      <input type="text" name="ulastName" class="form-control" id="lastName" placeholder="Last name" required>
       <div class="invalid-feedback">
           Please enter your last name!
       </div>
 
       <label for="userName">Username</label>
-        <input type="text" class="form-control" id="userName" placeholder="Username" required>
+        <input type="text" name="uname" class="form-control" id="userName" placeholder="Username" required>
         <div class="invalid-feedback">
-          Please choose a username.
+          Please choose a username!
         </div>
    
 
       <label for="password">Password</label>
-        <input type="password" class="form-control" id="password" placeholder="Password" required>
+        <input type="password" name="upassword" class="form-control" id="password" placeholder="Password" required>
         <div class="invalid-feedback">
           Password is required!
         </div>
  
       <label for="email">Email</label>
-        <input type="email" class="form-control" id="email" required>
+        <input type="email" name="uemail" class="form-control" id="email" required>
         <div class="invalid-feedback">
-          Email is required!
+          Please enter your email address!
+        </div>
+        
+      <label for="phone">Telephone</label>
+        <input type="text" name="phone" class="form-control" id="phone" required>
+        <div class="invalid-feedback">
+          Please enter a phone number!
         </div>
  
       <label for="address">Address</label>
-      <input type="text" class="form-control" id="address" required>
+      <input type="text" name="uaddress" class="form-control" id="address" required>
       <div class="invalid-feedback">
-        Please provide a valid .
+        Please provide a valid address!
       </div>
 
       <label for="city">City</label>
-      <input type="text" class="form-control" id="city" required>
+      <input type="text" name="ucity" class="form-control" id="city" required>
       <div class="invalid-feedback">
-        Please provide a valid city.
+        Please provide a valid city!
       </div>
 
       <label for="state">State</label>
-      <input type="text" class="form-control" id="state" required>
+      <input type="text" name="ustate" class="form-control" id="state" required>
       <div class="invalid-feedback">
-        Please provide a valid state.
+        Please provide a valid state!
       </div>
     
       <label for="zip">Zip Code</label>
-      <input type="text" class="form-control" id="zip" required>
+      <input type="text" name="uzip" class="form-control" id="zip" required>
       <div class="invalid-feedback">
-        Please provide a valid zip code.
+        Please provide a valid zip code!
       </div>
 
       <button type="submit" class="auth-btn btn btn-primary" id="signinBtn">Sign in</button>

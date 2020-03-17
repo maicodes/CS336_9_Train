@@ -13,12 +13,12 @@ public class ApplicationDB {
 	public Connection getConnection(){
 		
 		//Create a connection string
-		String connectionUrl = "jdbc:mysql://traindb.c5gyqa9jnozq.us-east-2.rds.amazonaws.com:3306/";
+		String connectionUrl = "jdbc:mysql://squaddb.c5gyqa9jnozq.us-east-2.rds.amazonaws.com:3306/TrainDB";
 		Connection connection = null;
 		
 		try {
 			//Load JDBC driver - the interface standardizing the connection procedure. Look at WEB-INF\lib for a mysql connector jar file, otherwise it fails.
-			Class.forName("com.mysql.jdbc.Driver").newInstance();
+			Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
 		} catch (InstantiationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -31,7 +31,7 @@ public class ApplicationDB {
 		}
 		try {
 			//Create a connection to your DB
-			connection = DriverManager.getConnection(connectionUrl,"valia", "valiaadmin");
+			connection = DriverManager.getConnection(connectionUrl,"squad", "Project1boba!");
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
