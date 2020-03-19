@@ -8,13 +8,13 @@
 	<div class="col-sm-8 col-md-4">
 		<form action="Auth" method="get" class="needs-validation" novalidate>
     		<label for="login_userName" class="col-form-label">User Name</label>
-      		<input type="text" class="form-control" id="login_userName" placeholder="John Doe" required>
+      		<input type="text" name="userName" class="form-control" id="login_userName" placeholder="John Doe" required>
       			<div class="invalid-feedback">
         			User name cannot be empty
       			</div>
  
     		<label for="login_assword" class="form-label">Password</label>
-      		<input type="password" class="form-control" id="login_password" placeholder="Password" required>
+      		<input type="password" name="password" class="form-control" id="login_password" placeholder="Password" required>
 
     			<div class="invalid-feedback">
         			Password cannot be empty
