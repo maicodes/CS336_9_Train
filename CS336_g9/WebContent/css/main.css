@@ -25,3 +25,18 @@ body, html {
 .hide {
 	display: none;
 }
+/*SUCCESS/ERROR BOX
+Ex. <div class = "error box"></div>
+*/
+.box {
+	border: 1px solid silver;
+	padding: 4px;
+	width: 100%;
+}
+
+.success {
+	background-color: #88ff88;
+}
+.error {
+	background-color: #ff6666;
+}

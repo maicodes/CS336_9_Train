@@ -1,5 +1,5 @@
 package pkg;
-
+import java.util.Enumeration;
 import pkg.Models.Customer;
 import java.io.IOException;
 import java.sql.Connection;
@@ -38,6 +38,30 @@ public class Auth extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		//response.getWriter().append("Served at: ").append(request.getContextPath());
+		String page = "/index.jsp";
+		
+		/*
+		
+		Prints out all request variables for debugging purposes
+		
+		Enumeration<String> params = request.getParameterNames(); 
+		while(params.hasMoreElements()){
+		 String paramName = params.nextElement();
+		 System.out.println("Parameter Name - "+paramName+", Value - "+request.getParameter(paramName));
+		}*/
+		
+		if (request.getParameter("action").equals("logout"))
+		{
+			loginUser.setUserName(null);
+			loginUser.setFirstName(null); 
+			loginUser.setLastName(null);
+			loginUser.setPassword(null);
+			page = "/index.jsp";
+		}
+		else
+		{
+		
+		
 		try {
 		ApplicationDB ap = new ApplicationDB();	
 		Connection con = ap.getConnection();		
@@ -46,6 +70,7 @@ public class Auth extends HttpServlet {
 		//Get input from user from auth.jsp login
 		String inputUserName = request.getParameter("userName");
 		String inputPassword = request.getParameter("password");
+		
 		
 		ps.setString(1, inputUserName);
 		
@@ -78,9 +103,10 @@ public class Auth extends HttpServlet {
 		catch (Exception x) {
 			System.out.println("Login fail");
 			System.out.print(x);
+			page = "/auth.jsp?try=fail";
 		}
-		
-		response.sendRedirect(request.getContextPath() + "/index.jsp");
+		}
+		response.sendRedirect(request.getContextPath() + page);
 	}
 
 	/**
@@ -127,6 +153,8 @@ public class Auth extends HttpServlet {
 			
 			ps.executeUpdate();
 			
+			res.sendRedirect(req.getContextPath() + "/index.jsp?creation=success");
+			
 			ap.closeConnection(con);
 
 		} catch (SQLException e) {
@@ -138,5 +166,5 @@ public class Auth extends HttpServlet {
 	public static Customer getLoginUser() {
 		return loginUser;
 	}
-
+	
 }

@@ -2,6 +2,13 @@
 
 
 <!-- Login Form -->
+<%
+if (request.getParameter("try") != null)
+{
+%>
+<div class = "error box">The attempted username/password combo is invalid. Please try again.</div>
+
+<% } %>
 
 
 <div class="auth" id="login">
