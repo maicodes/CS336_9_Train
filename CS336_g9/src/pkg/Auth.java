@@ -43,27 +43,39 @@ public class Auth extends HttpServlet {
 		Connection con = ap.getConnection();		
 		PreparedStatement ps = con.prepareStatement(select);
 		
-		//Get the userName text input from the auth.jsp
-		loginUser.setUserName( request.getParameter("userName"));
+		//Get input from user from auth.jsp login
+		String inputUserName = request.getParameter("userName");
+		String inputPassword = request.getParameter("password");
 		
-		ps.setString(1, loginUser.getUserName());
+		ps.setString(1, inputUserName);
 		
 		//Run the query against the database.
 		userInfo = ps.executeQuery();
 		
-		
+		// check whether the database return a user or not
 		if(userInfo.next()) {
-			loginUser.setFirstName(userInfo.getString("firstName")); 
-			loginUser.setLastName(userInfo.getString("lastName"));
-			System.out.println("Login Success!");
+			// the database return a user with the same username
+			String uPassword = userInfo.getString("password");
+			
+			if (uPassword.contentEquals(inputPassword)) {
+				// login success
+				loginUser.setUserName(inputUserName);
+				loginUser.setFirstName(userInfo.getString("firstName")); 
+				loginUser.setLastName(userInfo.getString("lastName"));
+				loginUser.setPassword(inputPassword);
+				System.out.println("Login Success!");
+			} else
+				throw new IOException("Your password is not correct!");
+
 		} else {
 			loginUser = new Customer();
-			System.out.println("No Data Found!");
+			throw new IOException(inputUserName + " is not found!");
 		}
 	
 		ap.closeConnection(con);
 		
-		} catch (Exception x) {
+		} 
+		catch (Exception x) {
 			System.out.println("Login fail");
 			System.out.print(x);
 		}
