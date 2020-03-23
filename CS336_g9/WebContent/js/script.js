@@ -29,10 +29,12 @@
     const newAccountBtn = document.querySelector('#newAccountBtn');
     const registerForm = document.querySelector('#register');
     const loginForm = document.querySelector("#login");
+    const error = document.querySelector("#badLogin");
     
     const newAccountBtnHandler = () => {
     	loginForm.classList.add("hide");
     	registerForm.classList.remove("hide");
+    	error.classList.add("hide");
     };
     newAccountBtn.onclick = newAccountBtnHandler;
     
