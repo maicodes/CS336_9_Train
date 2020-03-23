@@ -50,13 +50,16 @@ public class Auth extends HttpServlet {
 		 System.out.println("Parameter Name - "+paramName+", Value - "+request.getParameter(paramName));
 		}*/
 		
-		if (request.getParameter("action").equals("logout"))
+		if (request.getParameter("action") != null)
 		{
-			loginUser.setUserName(null);
-			loginUser.setFirstName(null); 
-			loginUser.setLastName(null);
-			loginUser.setPassword(null);
-			page = "/index.jsp";
+			if (request.getParameter("action").equals("logout"))
+			{
+				loginUser.setUserName(null);
+				loginUser.setFirstName(null); 
+				loginUser.setLastName(null);
+				loginUser.setPassword(null);
+				page = "/index.jsp";
+			}
 		}
 		else
 		{
