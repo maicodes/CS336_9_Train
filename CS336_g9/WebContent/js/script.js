@@ -1,8 +1,7 @@
 /**
  * 
  */
-
-(function() {
+document.addEventListener("DOMContentLoaded",  function() {
   window.addEventListener('load', function() {
 	  
     /* 
@@ -21,6 +20,47 @@
       }, false);
     });
     
+        
+    /*
+     * Customer Representative Page
+     * 
+     * */
+    function toggleBtn(btnIdentifier){
+    	const btns = document.querySelectorAll(btnIdentifier)
+    	
+    	for (const btn of btns) {
+    		if(btn == null)
+    			console.log("Cant find element " + btnIdentifier)
+    			
+    		btn.addEventListener('click', function (e) {
+    			const target = document.querySelector(btn.getAttribute('aria-controls'));
+    			if(target.getAttribute('aria-hidden') === 'true')
+    				target.setAttribute('aria-hidden', 'false');
+    			else
+    				target.setAttribute('aria-hidden', 'true');
+    		});
+    	}
+    }
+
+
+    function verticalNavItemToggle() {
+    	const currBtns = document.querySelectorAll('.toggle-btn')
+    	for(let btn of currBtns) {
+        	btn.addEventListener('click', function (e) {
+        		const parent = btn.closest("ul");
+            	// deactivate previous active button
+            	document.querySelector(parent.getAttribute('data-active')).setAttribute('aria-hidden', 'true');
+            	// activate new active button
+            	let active = btn.getAttribute('href');
+            	parent.setAttribute('data-active', active);
+                document.querySelector(active).setAttribute('aria-hidden', 'false');
+            });
+    	}
+    }
+    
+    verticalNavItemToggle();
+    toggleBtn(".single-toggle-btn")
+    
     
     /* 
      *  Handler sign in button
@@ -30,15 +70,17 @@
     const registerForm = document.querySelector('#register');
     const loginForm = document.querySelector("#login");
     const error = document.querySelector("#badLogin");
-    
-    const newAccountBtnHandler = () => {
+  
+    newAccountBtn.addEventListener('click', function(){
     	loginForm.classList.add("hide");
     	registerForm.classList.remove("hide");
-    	error.classList.add("hide");
-    };
-    newAccountBtn.onclick = newAccountBtnHandler;
+    	error.classList.add("hide");}, false);
+   
     
   }, false);
- 
-})();
+
+});
+
+
+
 

@@ -1,4 +1,5 @@
-@charset "ISO-8859-1";
+@charset "UTF-8";
+/*@charset "ISO-8859-1";*/
 
 body, html {
 	margin: 0;
@@ -39,4 +40,46 @@ Ex. <div class = "error box"></div>
 }
 .error {
 	background-color: #ff6666;
+}
+
+[aria-hidden="true"] {
+    display: none;
+}
+
+[aria-hidden="false"] {
+	display: block;
+}
+
+
+/*
+*	Customer Representative Page + Admin Page
+*/
+
+#cusRep .row, #admin .row {
+	height: 100vh
+}
+
+.contentBox {
+	margin-top: 3em
+} 
+
+.vertical-nav-con {
+	background-color: grey;
+}
+
+.vertical-nav {
+	margin-top: 3em;
+	margin-bottom: 0;
+	padding: 0;
+	text-align: center;
+	list-style: none;
+	height: 100%;
+}
+
+a {
+	text-decoration: none !important
+}
+
+.vertical-nav-item {
+	margin-bottom: 1rem
 }

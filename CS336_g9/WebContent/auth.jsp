@@ -76,7 +76,7 @@ if (request.getParameter("try") != null)
         </div>
         
       <label for="phone">Telephone</label>
-        <input type="text" name="phone" class="form-control" id="phone" required>
+        <input type="text" name="uphone" class="form-control" id="phone" required>
         <div class="invalid-feedback">
           Please enter a phone number!
         </div>
