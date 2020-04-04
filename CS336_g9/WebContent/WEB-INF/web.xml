@@ -9,4 +9,9 @@
     <welcome-file>default.htm</welcome-file>
     <welcome-file>default.jsp</welcome-file>
   </welcome-file-list>
+  
+  <context-param>
+  	<param-name>safe-update-off</param-name>
+  	<param-value>SET SQL_SAFE_UPDATES = 0;</param-value>
+  </context-param>
 </web-app>

@@ -39,6 +39,9 @@
         	<a class = "nav-link" href="Auth?action=logout">Log Out</a>
         <% } %>
       </li>
+      <li class = "nav-item">
+      	<a class = "nav-link" href = "Schedule">Schedules</a>
+      </li>
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Dropdown
