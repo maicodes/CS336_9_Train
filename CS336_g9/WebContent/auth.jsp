@@ -1,5 +1,12 @@
 <jsp:include page="header.jsp"/>
-
+<jsp:include page = "navigation.jsp"></jsp:include>
+<%@page import = "pkg.Auth" %>
+<%
+	if (Auth.isLoggedIn())
+	{
+		response.sendRedirect("index.jsp");
+	}
+%>
 
 <!-- Login Form -->
 <%

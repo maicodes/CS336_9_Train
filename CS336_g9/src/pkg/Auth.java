@@ -54,10 +54,7 @@ public class Auth extends HttpServlet {
 		{
 			if (request.getParameter("action").equals("logout"))
 			{
-				loginUser.setUserName(null);
-				loginUser.setFirstName(null); 
-				loginUser.setLastName(null);
-				loginUser.setPassword(null);
+				logout();
 				page = "/index.jsp";
 			}
 		}
@@ -168,6 +165,19 @@ public class Auth extends HttpServlet {
 	
 	public static Customer getLoginUser() {
 		return loginUser;
+	}
+	public static boolean isLoggedIn() {
+		//My condition is to just check if firstname AND lastname are set
+		//We can change to more secure check later
+		if (loginUser.getFirstName() != null && loginUser.getLastName() != null)
+			return true;
+		else
+			return false;
+	}
+	
+	private void logout()
+	{
+		loginUser = new Customer();
 	}
 	
 }
