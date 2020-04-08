@@ -15,6 +15,6 @@
 			<attribute name="owner.project.facets" value="jst.web"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="/Users/David/Documents/College/Data Class/Project/tomcat/lib/servlet-api.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Mr Nube/Desktop/Java/Servers/apache-tomcat-7.0.103/lib/servlet-api.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

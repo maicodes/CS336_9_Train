@@ -18,40 +18,41 @@
 			Employees : Add, Edit, Delete
 		 -->
 		<div id="adminEmp" aria-hidden="false">
-    		<button class="single-toggle-btn btn btn-outline-primary" aria-controls="#adminEmp-modal">Add New Employee</button>
-    		<!-- New Employee Form -->
-    		<div id="adminEmp-modal" aria-hidden="true">
-    			<form action="NewEmployee" method="post">
-					  <div class="form-group">
-					    <label for="admin-emp-ssn">SSN</label>
-					    <input type="text" class="form-control" id="admin-emp-ssn" name="emp-ssn">
-					  </div>
-					  <div class="form-group">
-					    <label for="admin-emp-fname">First Name</label>
-					    <input type="text" class="form-control" id="admin-emp-fname" name="emp-fname">
-					  </div>
-					  <div class="form-group">
-					    <label for="admin-emp-lname">Last Name</label>
-					    <input type="text" class="form-control" id="admin-emp-lname" name="emp-lname">
-					  </div>
-					  <div class="form-group">
-					    <label for="admin-emp-uname">User Name</label>
-					    <input type="text" class="form-control" id="admin-emp-uname" name="emp-uname">
-					  </div>
-					  <div class="form-group">
-					    <label for="admin-emp-pass">Password</label>
-					    <input type="password" class="form-control" id="admin-emp-pass" name="emp-pass">
-					  </div>
-					  <button type="submit" class="btn btn-primary">Submit</button>
-				</form>
-    		</div>
-    		
-    		
-    		
-    		<!-- End New Employee Form -->
-    		
+			<div class="group-btns">
+							<button class="single-toggle-btn btn btn-outline-primary" aria-controls="#adminEmp-add-modal">Add New Employee</button>
+							<button class="single-toggle-btn btn btn-outline-primary" aria-controls="#adminEmp-edit-modal">Edit Employee Info</button>
+				    		<button class="single-toggle-btn btn btn-outline-primary" aria-controls="#adminEmp--delete-modal">Delete Employee</button>
+
+			</div>
+					<!-- New Employee Form -->
+				    		<div id="adminEmp-add-modal" aria-hidden="true">
+				    			<form action="NewEmployee" method="post">
+									  <div class="form-group">
+									    <label for="admin-emp-ssn">SSN</label>
+									    <input type="text" class="form-control" id="admin-emp-ssn" name="emp-ssn">
+									  </div>
+									  <div class="form-group">
+									    <label for="admin-emp-fname">First Name</label>
+									    <input type="text" class="form-control" id="admin-emp-fname" name="emp-fname">
+									  </div>
+									  <div class="form-group">
+									    <label for="admin-emp-lname">Last Name</label>
+									    <input type="text" class="form-control" id="admin-emp-lname" name="emp-lname">
+									  </div>
+									  <div class="form-group">
+									    <label for="admin-emp-uname">User Name</label>
+									    <input type="text" class="form-control" id="admin-emp-uname" name="emp-uname">
+									  </div>
+									  <div class="form-group">
+									    <label for="admin-emp-pass">Password</label>
+									    <input type="password" class="form-control" id="admin-emp-pass" name="emp-pass">
+									  </div>
+									  <button type="submit" class="btn btn-primary">Submit</button>
+								</form>
+				    		</div>
+				    <!-- End New Employee Form -->
+		
     		<br>
-    		
     		<h3>List of all employees:</h3>
     		<jsp:include page="admin_employees.jsp"/>
 		</div>

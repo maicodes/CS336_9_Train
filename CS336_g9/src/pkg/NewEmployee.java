@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/NewEmployee")
 public class NewEmployee extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private String insert = "INSERT INTO Employees" 
+	private String insert = "INSERT INTO Employees (ssn, FirstName, LastName, userName, password)" 
 			+ "VALUES (?,?,?,?,?)";
     /**
      * @see HttpServlet#HttpServlet()
@@ -29,7 +29,6 @@ public class NewEmployee extends HttpServlet {
     
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		System.out.print("here");
-		response.sendRedirect("/index.jsp");
 	}
 
 	/**
@@ -61,15 +60,13 @@ public class NewEmployee extends HttpServlet {
 			ps.setString(5, pass);
 
 			ps.executeUpdate();
-			
+			res.sendRedirect(req.getContextPath() + "/admin.jsp");
 			ap.closeConnection(con);
 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		res.sendRedirect("/admin.jsp");
 	}
 
 }
