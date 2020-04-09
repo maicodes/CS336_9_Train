@@ -43,7 +43,7 @@ public class admin_Employees extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-ApplicationDB ap = new ApplicationDB();
+		ApplicationDB ap = new ApplicationDB();
 		
 		Connection con = ap.getConnection();
 		

@@ -6,10 +6,11 @@
 	<div class="row">
 	<div class="col-2 vertical-nav-con">
 	<ul class="vertical-nav" data-active="#adminEmp">
-		<li class="vertical-nav-item"><a href="#adminEmp" class="toggle-btn btn btn-outline-light">Employees</a></li>
-		<li class="vertical-nav-item"><a href="#adminCus" class="toggle-btn btn btn-outline-light">Customers</a> </li>
-		<li class="vertical-nav-item"><a href="#adminMes" class="toggle-btn btn btn-outline-light">Messages</a></li>
-		<li class="vertical-nav-item"><a href="#adminTra" class="toggle-btn btn btn-outline-light">Train Schedules</a></li>
+		<li class="vertical-nav-item"><a href="#adminEmp" class="toggle-btn btn btn-outline-light">Manage Employees</a></li>
+		<li class="vertical-nav-item"><a href="#adminCus" class="toggle-btn btn btn-outline-light">Manage Customers</a> </li>
+		<li class="vertical-nav-item"><a href="#adminSaleReports" class="toggle-btn btn btn-outline-light">Manage Sales Reports</a></li>
+		<li class="vertical-nav-item"><a href="#adminReservations" class="toggle-btn btn btn-outline-light">Manage Reservations</a></li>
+		<li class="vertical-nav-item"><a href="#adminRevenue" class="toggle-btn btn btn-outline-light">Manage Revenue</a></li>
 	</ul>
 	</div>
 
@@ -69,7 +70,7 @@
 			</div>
 			<!-- End Delete Employee Form -->
 			
-			</div>
+			
 			<!-- Edit Employee Form -->
 				    		<div id="adminEmp-edit-modal" aria-hidden="true">
 				    			<h5>Edit Employee Information</h5>
@@ -119,12 +120,40 @@
     		<jsp:include page="admin_customers.jsp"/>
 		</div>
 		
-		<div id="adminMes" aria-hidden="true">
-			Messages
+		
+		<!--  
+			Obtain sales reports for a particular month
+		-->
+		<div id="adminSaleReports" aria-hidden="true">
+			<h3>Obtain sales reports by months:</h3>
+    		<form action="admin_salesReports" method="post">
+    			<div class="form-group">
+					<label for="admin-sales">Select a month: </label>
+					<input type="number" class="form-control" id="admin-sales" name="admin-sales-month">
+				</div>
+				  <button type="submit" class="btn btn-primary">Submit</button>
+    		</form>
 		</div>
 		
-		<div id="adminTra" aria-hidden="true">
-			Train Schedules
+		<!--  
+			Reservations
+		-->
+		<div id="adminReservations" aria-hidden="true">
+			[] Produce a list of reservations:
+				[] by transit line and train number (e.g. NortheastCorridor #3425)
+				[] by customer name 
+		</div>
+		
+		<!--  
+			Revenue
+		-->
+		<div id="adminRevenue" aria-hidden="true">
+				[] Produce a listing of revenue per:
+				 [] transit line
+				 [] destination city
+				 [] customer name
+				 [] best customer
+				 [] best 5 most active transit lines 
 		</div>
 	</div>
 	</div>
