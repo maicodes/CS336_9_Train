@@ -21,15 +21,16 @@
 			<div class="group-btns">
 							<button class="single-toggle-btn btn btn-outline-primary" aria-controls="#adminEmp-add-modal">Add New Employee</button>
 							<button class="single-toggle-btn btn btn-outline-primary" aria-controls="#adminEmp-edit-modal">Edit Employee Info</button>
-				    		<button class="single-toggle-btn btn btn-outline-primary" aria-controls="#adminEmp--delete-modal">Delete Employee</button>
+				    		<button class="single-toggle-btn btn btn-outline-primary" aria-controls="#adminEmp-delete-modal">Delete Employee</button>
 
 			</div>
-					<!-- New Employee Form -->
+			<!-- New Employee Form -->
 				    		<div id="adminEmp-add-modal" aria-hidden="true">
-				    			<form action="NewEmployee" method="post">
+				    			<h5>Add New Employee</h5>
+				    			<form action="admin_Employees" method="post">
 									  <div class="form-group">
 									    <label for="admin-emp-ssn">SSN</label>
-									    <input type="text" class="form-control" id="admin-emp-ssn" name="emp-ssn">
+									    <input type="text" class="form-control" id="admin-emp-ssn" name="add-emp-ssn">
 									  </div>
 									  <div class="form-group">
 									    <label for="admin-emp-fname">First Name</label>
@@ -50,7 +51,54 @@
 									  <button type="submit" class="btn btn-primary">Submit</button>
 								</form>
 				    		</div>
-				    <!-- End New Employee Form -->
+			<!-- End New Employee Form -->
+				    
+			<!-- Delete Employee Form -->
+			<div>
+							<div id="adminEmp-delete-modal" aria-hidden="true">
+								<h5>Delete Employee</h5>
+				    			<form action="admin_Employees" method="post">
+									  <div class="form-group">
+									    <label for="admin-emp-del-ssn">Employee SSN: </label>
+									    <input type="text" class="form-control" id="admin-emp-del-ssn" name="del-emp-ssn">
+									  </div>
+									  <button type="submit" class="btn btn-primary">Submit</button>
+								</form>
+				    		</div>	
+			
+			</div>
+			<!-- End Delete Employee Form -->
+			
+			</div>
+			<!-- Edit Employee Form -->
+				    		<div id="adminEmp-edit-modal" aria-hidden="true">
+				    			<h5>Edit Employee Information</h5>
+				    			<form action="admin_Employees" method="post">
+									  <div class="form-group">
+									    <label for="admin-emp-edit-ssn">Select an employee's ssn to edit: </label>
+									    <input type="text" class="form-control" id="admin-emp-edit-ssn" name="edit-emp-ssn">
+									  </div>
+									  <h6>Select one or more fields to edit:</h6>
+									  <div class="form-group">
+									    <label for="admin-emp-fname">First Name</label>
+									    <input type="text" class="form-control" id="admin-emp-edit-fname" name="emp-fname">
+									  </div>
+									  <div class="form-group">
+									    <label for="admin-emp-lname">Last Name</label>
+									    <input type="text" class="form-control" id="admin-emp-edit-lname" name="emp-lname">
+									  </div>
+									  <div class="form-group">
+									    <label for="admin-emp-uname">User Name</label>
+									    <input type="text" class="form-control" id="admin-emp-edit-uname" name="emp-uname">
+									  </div>
+									  <div class="form-group">
+									    <label for="admin-emp-pass">Password</label>
+									    <input type="password" class="form-control" id="admin-emp-edit-pass" name="emp-pass">
+									  </div>
+									  <button type="submit" class="btn btn-primary">Submit</button>
+								</form>
+				    		</div>
+			<!-- End New Employee Form -->
 		
     		<br>
     		<h3>List of all employees:</h3>
