@@ -209,18 +209,35 @@ public class Install extends HttpServlet {
 		PreparedStatement ps = c.prepareStatement("SELECT name FROM Transit_Lines ORDER BY name ASC");
 		return ps.executeQuery();
 	}
-	private void setUp() throws SQLException
+	private void setUp() throws SQLException, ParseException
 	{
+		
+		String sql0 = "SELECT arrive_time FROM Stops ORDER BY arrive_time DESC LIMIT 1";
+		PreparedStatement check = c.prepareStatement(sql0);
+		ResultSet rs = check.executeQuery();
+		rs.next();
+		//String lastEntry = rs.getString(1);
+		//lastEntry = lastEntry.substring(0,10);
+		
+//		if (lib.greaterThanDate(lib.getToday(), lastEntry))
+//		{
+//			System.out.println("Will not add any new entries because SQLException will be thrown for duplicate entry");
+//		}
+		
 		ServletContext cxt = getServletContext();
+		
 		String sql1 = cxt.getInitParameter("safe-update-off");
-		String sql2 = "ALTER TABLE Stops DROP FOREIGN KEY nextStop_id";
-		String sql3 = "DELETE FROM Stops";
 		PreparedStatement ps = c.prepareStatement(sql1);
 		ps.executeQuery();
+		
+		String sql2 = "ALTER TABLE Stops DROP FOREIGN KEY nextStop_id";
 		ps = c.prepareStatement(sql2);
 		ps.executeUpdate();
+		
+		String sql3 = "DELETE FROM Stops";
 		ps = c.prepareStatement(sql3);
 		ps.executeUpdate();
+		
 		
 		
 		//Removes safe mode.
@@ -271,98 +288,101 @@ public class Install extends HttpServlet {
 		String current_time, next_station_time;
 		
 		//Should run for each transit line
-		for (String line_name : line_names)
-		{
-			
-			current_time = TRAIN_START_TIME;											//Always generate schedule starting at 5:00 AM
-			
-			trains = get_trains_for_line(line_name);									//Get list of trains that can run this line
-			station_order = station_order_for_line.get(line_name);						//Get list of stations they need to stop at
-			totalTime = TRANSPORT_MINUTES * station_order.length;			//Calculate the total time a train runs through a line
-			do																			//Check if train will run past day ends
+			for (String line_name : line_names)
 			{
-				train_id = next_available_train(trains, current_time, turn);
-				//Generate stops for 1 train
-				if (train_id != -1)				//This means there are available trains
+				
+				current_time = TRAIN_START_TIME;											//Always generate schedule starting at 5:00 AM
+				
+				trains = get_trains_for_line(line_name);									//Get list of trains that can run this line
+				station_order = station_order_for_line.get(line_name);						//Get list of stations they need to stop at
+				totalTime = TRANSPORT_MINUTES * station_order.length;			//Calculate the total time a train runs through a line
+				do																			//Check if train will run past day ends
 				{
-					next_station_time = current_time;
+					train_id = next_available_train(trains, current_time, turn);
+					//Generate stops for 1 train
+					if (train_id != -1)				//This means there are available trains
+					{
+						next_station_time = current_time;
+						if (turn == 1)
+						{
+							//Runs through all stations except destination station.
+							for (int j = 0; j < station_order.length; j++)
+							{
+								position = j+1;										//Position = station_list index + 1
+								
+								stop_id = lib.getInitials(line_name);					//Begin by taking initials of the transit line
+								stop_id += String.format("%02d", position);			//Add on position number for stop ID
+								
+								station_id = id_from_name(station_order[j]);		//Station id fetched from station name
+								if (j == station_order.length - 1)
+								{
+									nextStop_id = null;
+								}
+								else
+								{
+									nextStop_id = lib.getInitials(line_name);				
+									nextStop_id+= String.format("%02d", position + 1);
+								}
+								
+								arrive_time = lib.getSqlDate(today, next_station_time);	//Generate date for SQL
+								
+								next_station_time = lib.addTime(next_station_time, TRANSPORT_MINUTES);
+								
+								ps.setString(1, stop_id);
+								ps.setString(2, station_id);
+								ps.setString(3, arrive_time);
+								ps.setString(4, Integer.toString(train_id));
+								ps.setString(5, Integer.toString(position));
+								ps.setString(6, nextStop_id);
+								
+								ps.executeUpdate();
+								
+								turn = 2;
+							}
+						}
+						else if (turn == 2)
+						{
+							//Handle destination back to start from here
+							for (int j = station_order.length; j > 0; j--)
+							{
+								position = j;
+								
+								stop_id = lib.getInitials(line_name);
+								stop_id += String.format("%02d", position);
+								
+								station_id = id_from_name(station_order[j - 1]);
+								if (j == 1)
+								{
+									nextStop_id = null;
+								}
+								else
+								{
+									nextStop_id = lib.getInitials(line_name);
+									nextStop_id += String.format("%02d", position - 1);
+								}
+								arrive_time = lib.getSqlDate(today, next_station_time);
+								
+								next_station_time = lib.addTime(next_station_time, TRANSPORT_MINUTES);
+								
+								ps.setString(1, stop_id);
+								ps.setString(2, station_id);
+								ps.setString(3, arrive_time);
+								ps.setString(4, Integer.toString(train_id));
+								ps.setString(5, Integer.toString(position));
+								ps.setString(6, nextStop_id);
+								
+								ps.executeUpdate();
+								
+								turn = 1;
+							}
+						}
+					}
 					if (turn == 1)
 					{
-						//Runs through all stations except destination station.
-						for (int j = 0; j < station_order.length; j++)
-						{
-							position = j+1;										//Position = station_list index + 1
-							
-							stop_id = lib.getInitials(line_name);					//Begin by taking initials of the transit line
-							stop_id += String.format("%02d", position);			//Add on position number for stop ID
-							
-							station_id = id_from_name(station_order[j]);		//Station id fetched from station name
-							if (j == station_order.length - 1)
-							{
-								nextStop_id = null;
-							}
-							else
-							{
-								nextStop_id = lib.getInitials(line_name);				
-								nextStop_id+= String.format("%02d", position + 1);
-							}
-							
-							arrive_time = lib.getSqlDate(today, next_station_time);	//Generate date for SQL
-							
-							next_station_time = lib.addTime(next_station_time, TRANSPORT_MINUTES);
-							
-							ps.setString(1, stop_id);
-							ps.setString(2, station_id);
-							ps.setString(3, arrive_time);
-							ps.setString(4, Integer.toString(train_id));
-							ps.setString(5, Integer.toString(position));
-							ps.setString(6, nextStop_id);
-							
-							ps.executeUpdate();
-							
-							turn = 2;
-						}
+						current_time = lib.addTime(current_time, NEXT_TRAIN_MINUTES);
 					}
-					else if (turn == 2)
-					{
-						//Handle destination back to start from here
-						for (int j = station_order.length; j > 0; j--)
-						{
-							position = j;
-							
-							stop_id = lib.getInitials(line_name);
-							stop_id += String.format("%02d", position);
-							
-							station_id = id_from_name(station_order[j - 1]);
-							if (j == 1)
-							{
-								nextStop_id = null;
-							}
-							else
-							{
-								nextStop_id = lib.getInitials(line_name);
-								nextStop_id += String.format("%02d", position - 1);
-							}
-							arrive_time = lib.getSqlDate(today, next_station_time);
-							
-							next_station_time = lib.addTime(next_station_time, TRANSPORT_MINUTES);
-							
-							ps.setString(1, stop_id);
-							ps.setString(2, station_id);
-							ps.setString(3, arrive_time);
-							ps.setString(4, Integer.toString(train_id));
-							ps.setString(5, Integer.toString(position));
-							ps.setString(6, nextStop_id);
-							
-							ps.executeUpdate();
-							
-							turn = 1;
-						}
-					}
-				}
-				current_time = lib.addTime(current_time, NEXT_TRAIN_MINUTES);
-			} while (can_run(current_time, TRAIN_STOP_TIME, totalTime));
-		}
+				} while (can_run(current_time, TRAIN_STOP_TIME, totalTime));
+			}
 		close();
 	}
 	

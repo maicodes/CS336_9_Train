@@ -1,5 +1,9 @@
 package pkg;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -8,8 +12,11 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.TimeZone;
+
+import pkg.Models.StationTrain;
 
 public class Common {
 
@@ -37,6 +44,35 @@ public class Common {
 		Date today = Calendar.getInstance().getTime();
 		String rn = df.format(today);
 		rn = rn.substring(0,11);
+		
+		return rn;
+	}
+	public ArrayList<String> getWeek() throws ParseException {
+		String today = getToday();
+		ArrayList<String> week = new ArrayList<String>();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		Calendar c = Calendar.getInstance();
+		String workingDate = today;
+		week.add(workingDate);
+		
+		for (int i = 0; i < 6; i++)
+		{
+			
+			c.setTime(sdf.parse(workingDate));
+			c.add(Calendar.DATE, 1);  // number of days to add
+			workingDate = sdf.format(c.getTime());  // dt is now the new date
+			
+			week.add(workingDate);
+			
+		}
+		return week;
+	}
+	public String getTime()
+	{
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date today = Calendar.getInstance().getTime();
+		String rn = df.format(today);
+		rn = rn.substring(11,16);
 		
 		return rn;
 	}
@@ -107,5 +143,68 @@ public class Common {
 		ResultSet rs = p.executeQuery();
 		rs.next();
 		return rs.getString(1);
+	}
+	public ArrayList<StationTrain> sortTime(ArrayList<StationTrain> list) throws ParseException //sorts by time
+	{
+		for (int i = 0; i < list.size(); i++)
+		{
+			for (int j = 0; j < list.size() - i -1; j++)
+			{
+				if (greaterThan(list.get(j).getDep(), list.get(j+1).getDep()))
+				{
+					Collections.swap(list, j, j+1);
+				}
+			}
+		}
+		return list;
+	}
+	public boolean greaterThan(String t1, String t2) throws ParseException //Compares 2 times
+	{
+		SimpleDateFormat d = new SimpleDateFormat("HH:mm");
+		d.setTimeZone(TimeZone.getTimeZone("America/New_York"));
+		
+		Date d1 = new Date();
+		Date d2 = new Date();
+		
+		d1 = d.parse(t1);
+		d2 = d.parse(t2);
+		
+		return d1.after(d2);
+	}
+	
+	public boolean greaterThanDate(String d1, String d2) throws ParseException
+	{
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Date date1 = sdf.parse(d1);
+        Date date2 = sdf.parse(d2);
+        
+        return date1.after(date2);
+	}
+	
+	public String encode(String value)
+	{
+		try {
+			return URLEncoder.encode(value, StandardCharsets.UTF_8.toString());
+		}
+		catch (UnsupportedEncodingException ex) {
+            throw new RuntimeException(ex.getCause());
+		}
+	}
+	public String decode(String value) {
+        try {
+            return URLDecoder.decode(value, StandardCharsets.UTF_8.toString());
+        } catch (UnsupportedEncodingException ex) {
+            throw new RuntimeException(ex.getCause());
+        }
+    }
+	
+	public static void main(String[] args) throws ParseException
+	{
+		Common c = new Common();
+		System.out.println(c.getToday());
+		for (String s : c.getWeek())
+		{
+			System.out.println(s);
+		}
 	}
 }
