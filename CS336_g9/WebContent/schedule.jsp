@@ -94,8 +94,8 @@ if (dep_arr != 0)
 </form>
 <hr>
 <h2>Forward Path</h2>
-	<table border = 1 style = "white-space: nowrap;">
-		<thead>
+	<table border = 1 style = "white-space: nowrap;" class = "table table-striped">
+		<thead class = "thead-dark">
 			<tr>
 				<th>Train</th>
 				<%
@@ -146,8 +146,8 @@ if (dep_arr != 0)
 	titlePointer = trains.get(0).get_trips().get(0);
 %>
 <h2>Return Path</h2>
-	<table border = 1 style = "white-space: nowrap;">
-		<thead>
+	<table border = 1 style = "white-space: nowrap;" class = "table table-striped">
+		<thead class = "thead-dark">
 			<tr>
 				<th>Train</th>
 				<%
@@ -242,31 +242,19 @@ if (request.getParameter("origin") != null && request.getParameter("destination"
 
 <h2><%=origin %> to <%= destination %></h2>
 <hr>
-<h2>Displaying for <%=date %></h2>
 
-<form method = "get">
-	<label for = "day">View schedule for: </label>
-	<select name = "day">
-		<%
-			for (String d : dates) {
-		%>
-			<option value = "<%=d %>"><%=d %></option>
-		<%
-			}
-		%>
-	</select>
-	<input type = "hidden" name = "origin" value = "<%=((String) request.getAttribute("origin")).replaceAll("\\s","") %>">
-	<input type = "hidden" name = "destination" value = "<%=((String) request.getAttribute("destination")).replaceAll("\\s","") %>">
-	<input type = "submit">
-</form>
-<hr>
-
-<table border = 1>
+<div class = "container">
+<div class = "row">
+<div class = "col">
+<table class = "table table-striped" style = "width: 50%;" >
+	<thead class = "thead-dark">
 	<tr>
 		<th>Train Number</th>
 		<th>Origin Departure</th>
 		<th>Destination Arrival</th>
 	</tr>
+	</thead>
+	<tbody>
 <%
 	//My brain is a little slow right now so rather than do this in MySQL I'm just going to process the fetched data
 	@SuppressWarnings("unchecked")
@@ -347,19 +335,40 @@ if (request.getParameter("origin") != null && request.getParameter("destination"
 <%
 	}
 %>
-
+</tbody>
 </table>
+</div>
+<div class = "col">
+	<h2>Displaying for <%=date %></h2>
 
+<form method = "get">
+	<label for = "day">View schedule for: </label>
+	<select name = "day">
+		<%
+			for (String d : dates) {
+		%>
+			<option value = "<%=d %>"><%=d %></option>
+		<%
+			}
+		%>
+	</select>
+	<input type = "hidden" name = "origin" value = "<%=((String) request.getAttribute("origin")).replaceAll("\\s","") %>">
+	<input type = "hidden" name = "destination" value = "<%=((String) request.getAttribute("destination")).replaceAll("\\s","") %>">
+	<input type = "submit">
+</form>
 <%
 	String base_url = "index.jsp?";
 %>
-
-	<br>
-	<form action = "<%=base_url%>">
+<form action = "<%=base_url%>">
 		<input type = "hidden" name = "origin" value = "<%= (String) request.getParameter("origin") %>">
 		<input type = "hidden" name = "destination" value = "<%= (String) request.getParameter("destination")%>">
 		<button>Buy a ticket for this route</button>
 	</form>
+</div>
+</div>
+</div>
+
+
 
 <%
 }
