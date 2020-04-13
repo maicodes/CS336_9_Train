@@ -1,7 +1,6 @@
 package pkg;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -43,11 +42,37 @@ public class Schedule extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		//The plan is to just fetch all the transit lines and let the user pick a schedule from them.
-		//Not very familiar with MVC design principles, but I will not create a model for this
-		//because all I'm really doing is fetching the names of every transit line and storing it in
-		//maybe an array or ArrayList.
-		if (request.getParameter("line") == null)
+		if (request.getParameter("origin") != null && request.getParameter("destination") != null)
+		{
+			//bad design code but works don't care to fix at the moment
+			String origin = request.getParameter("origin").replaceAll("(.)([A-Z0-9])", "$1 $2");
+			if (origin.equals("Aberdeen- Matawan")) origin = "Aberdeen-Matawan";
+			String destination = request.getParameter("destination").replaceAll("(.)([A-Z0-9])", "$1 $2");
+			if (destination.equals("Aberdeen- Matawan")) destination = "Aberdeen-Matawan";
+			
+			try {
+				request.setAttribute("trains", get_trains(transit_line_for_stations(origin, destination)));
+				request.setAttribute("forward-run", forward_run(origin, destination));
+				request.setAttribute("origin", origin);
+				request.setAttribute("destination", destination);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			
+		}
+		else if (request.getParameter("origin") != null)
+		{
+			String name = request.getParameter("origin").replaceAll("(.)([A-Z0-9])", "$1 $2");
+			if (name.equals("Aberdeen- Matawan")) name = "Aberdeen-Matawan";
+			try {
+				request.setAttribute("stations", destinations(name));
+				request.setAttribute("selection", "Destination");
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			
+		}
+		else if (request.getParameter("line") == null)
 		{
 			try {
 				ArrayList<String> transit_line_names = lib.get_transit_line_names();
@@ -59,23 +84,32 @@ public class Schedule extends HttpServlet {
 				e.printStackTrace();
 			}
 		
-		request.getRequestDispatcher("schedule.jsp").forward(request, response);
-		response.getWriter().append("Served at: ").append(request.getContextPath());
 		}
 		else {
-			PrintWriter ps = response.getWriter();
-			String name = request.getParameter("line").replaceAll("(.)([A-Z])", "$1 $2");
-			
-			try {
-				ArrayList<Train> trains_for_line = get_trains(name);
-				
-				request.setAttribute("trains", trains_for_line);
-				request.setAttribute("line_name", name);
-			} catch (SQLException e) {
-				e.printStackTrace();
+			if (request.getParameter("line").equals("all"))
+			{
+				try {
+					request.setAttribute("stations", get_stations());
+					request.setAttribute("selection", "Origin");
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
 			}
-		request.getRequestDispatcher("schedule.jsp").forward(request, response);
+			else
+			{
+				String name = request.getParameter("line").replaceAll("(.)([A-Z0-9])", "$1 $2");
+				
+				try {
+					ArrayList<Train> trains_for_line = get_trains(name);
+					
+					request.setAttribute("trains", trains_for_line);
+					request.setAttribute("line_name", name);
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
 		}
+		request.getRequestDispatcher("schedule.jsp").forward(request, response);
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -169,4 +203,114 @@ public class Schedule extends HttpServlet {
 		return linkedTrips;
 	}
 	
+	private ArrayList<String> get_stations() throws SQLException
+	{
+		ArrayList<String> stations = new ArrayList<String>();
+		PreparedStatement ps = c.prepareStatement("SELECT st.station_name " + 
+				"FROM Stops s, Stations st " + 
+				"WHERE s.station_id = st.station_id " + 
+				"GROUP BY s.station_id");
+		
+		ResultSet rs = ps.executeQuery();
+		while(rs.next())
+		{
+			stations.add(rs.getString(1));
+		}
+		
+		return stations;
+	}
+	
+	private ArrayList<String> destinations(String origin) throws SQLException
+	{
+		ArrayList<String> stations = new ArrayList<String>();
+		String SQL = "SELECT st2.station_name " + 
+				"FROM Trains t2, Stops s2, Stations st2 " + 
+				"WHERE t2.t_id = s2.train_id " + 
+				"AND st2.station_id = s2.station_id " +
+				"AND st2.station_name <> ? " +
+				"AND t2.transitLine_Name IN " + 
+				"(SELECT t.transitLine_Name " + 
+				"FROM Stops s, Stations st, Trains t " + 
+				"WHERE s.station_id = st.station_id " + 
+				"AND t.t_id = s.train_id " + 
+				"AND st.station_name = ? " + 
+				"GROUP BY transitLine_Name) " + 
+				"GROUP BY station_name";
+		PreparedStatement ps = c.prepareStatement(SQL);
+		ps.setString(1, origin);
+		ps.setString(2, origin);
+		ResultSet rs = ps.executeQuery();
+		while (rs.next())
+		{
+			stations.add(rs.getString(1));
+		}
+		return stations;
+	}
+	
+	private String transit_line_for_stations(String origin, String destination) throws SQLException
+	{
+		String SQL = "SELECT DISTINCT station_name, Trains.transitLine_Name " + 
+				"FROM Stops " + 
+				"JOIN Stations " + 
+				"ON Stops.station_id = Stations.station_id " + 
+				"JOIN Trains " + 
+				"ON Trains.t_id = Stops.train_id " + 
+				"WHERE station_name = ? OR station_name = ?;";
+		PreparedStatement ps = c.prepareStatement(SQL);
+		ps.setString(1, origin);
+		ps.setString(2, destination);
+		
+		ResultSet rs = ps.executeQuery();
+		ArrayList<String> potential_lines = new ArrayList<String>();
+		String line;
+		
+		while (rs.next())
+		{
+			if (potential_lines.contains(rs.getString("transitLine_Name")))
+			{
+				line = rs.getString("transitLine_Name");
+				return line;
+			}
+			else
+			{
+				potential_lines.add(rs.getString("transitLine_Name"));
+			}
+		}
+		
+		String fallback = "SELECT DISTINCT Trains.transitLine_Name " + 
+				"FROM Trains " + 
+				"JOIN Stops " + 
+				"ON Stops.train_id = Trains.t_id " + 
+				"JOIN Stations " + 
+				"ON Stations.station_id = Stops.station_id " + 
+				"WHERE station_name = ?";
+		
+		ps = c.prepareStatement(fallback);
+		ps.setString(1, origin);
+		rs = ps.executeQuery();
+		rs.next();
+		return rs.getString(1);
+	}
+	
+	private boolean forward_run(String origin, String destination) throws SQLException
+	{
+		String SQL = "SELECT DISTINCT position " + 
+				"FROM Stops " + 
+				"JOIN Stations " + 
+				"ON Stations.station_id = Stops.station_id " + 
+				"WHERE Stations.station_name = ?;";
+		PreparedStatement stmt = c.prepareStatement(SQL);
+		
+		stmt.setString(1, origin);
+		ResultSet rs = stmt.executeQuery();
+		rs.next();
+		int origin_position = rs.getInt(1);
+		
+		stmt.setString(1, destination);
+		rs = stmt.executeQuery();
+		rs.next();
+		int destination_position = rs.getInt(1);
+		
+		return destination_position > origin_position;
+	}
 }
