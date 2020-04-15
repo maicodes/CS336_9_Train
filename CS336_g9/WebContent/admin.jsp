@@ -139,9 +139,32 @@
 			Reservations
 		-->
 		<div id="adminReservations" aria-hidden="true">
-			[] Produce a list of reservations:
-				[] by transit line and train number (e.g. NortheastCorridor #3425)
-				[] by customer name 
+			<h5>Get a list of reservations by transit line:</h5>
+    		<form action="admin_reservations" method="post">
+    			<div class="form-group">
+					<label for="admin-res-transitLine">Transit Line Name: </label>
+					<input type="text" class="form-control" id="admin-res-transitLine" name="admin-res-tran">
+				</div>
+				  <button type="submit" class="btn btn-outline-primary">Submit</button>
+    		</form>
+    		<br>
+    		<h5>Get a list of reservations by train number:</h5>
+    		<form action="admin_reservations" method="post">
+    			<div class="form-group">
+					<label for="admin-res-train">Train Number: </label>
+					<input type="number" class="form-control" id="admin-res-train" name="admin-res-train">
+				</div>
+				  <button type="submit" class="btn btn-outline-primary">Submit</button>
+    		</form>
+    		<br>
+    		<h5>Get a list of reservations by customer name:</h5>
+    		<form action="admin_reservations" method="post">
+    			<div class="form-group">
+					<label for="admin-res-cus">Customer Name: </label>
+					<input type="text" class="form-control" id="admin-res-cus" name="admin-res-cus">
+				</div>
+				  <button type="submit" class="btn btn-outline-primary">Submit</button>
+    		</form>
 		</div>
 		
 		<!--  
