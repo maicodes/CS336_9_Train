@@ -1,5 +1,7 @@
 package pkg;
 
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
@@ -7,6 +9,7 @@ import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -15,6 +18,8 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.TimeZone;
+
+import javax.servlet.http.HttpServletResponse;
 
 import pkg.Models.StationTrain;
 
@@ -205,6 +210,57 @@ public class Common {
 		for (String s : c.getWeek())
 		{
 			System.out.println(s);
+		}
+	}
+	
+	public static void printSQLResultTable(ResultSet rs, HttpServletResponse res, String headline) throws SQLException {
+		res.setContentType("text/html");
+		try {
+			PrintWriter out = res.getWriter();
+			
+			out.print("<html>" + 
+					"<head>" + 
+					"<link rel=\"stylesheet\" type=\"text/css\" href=\"css/main.css\">\r\n" + 
+					"<link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css\" integrity=\"sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm\" crossorigin=\"anonymous\">" + 
+					"</head>" + 
+					"<body>");
+			
+			out.print("<h3>"+ headline +"</h3><br>");
+			out.print("<table class=\"table table-striped\">");
+			
+			ResultSetMetaData rsmd = rs.getMetaData();
+			
+			int numCols = rsmd.getColumnCount();
+			
+			out.print(" <thead class=\"thead-dark\">" + 
+						"<tr>");
+			for(int i = 1; i <= numCols; i++) {
+				out.print("<th scope=\"col\">" + rsmd.getColumnName(i) + "</th>");
+			}
+			
+			out.print("</tr> </thead>");
+			
+			out.print("<tbody>");
+			
+			while(rs.next()) {
+				out.print("<tr>");
+				for(int i = 1; i <= numCols; i++) {	
+					out.print("<td>");
+					out.print(rs.getString(i));
+					out.print("</td>");
+				}
+				out.print("</tr>");
+			}
+			out.print("</tbody>");
+			
+			out.print("</table>");
+			
+			out.print("</body></html>");
+			
+			out.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 }

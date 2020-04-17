@@ -75,6 +75,12 @@ if (request.getParameter("try") != null)
         <div class="invalid-feedback">
           Password is required!
         </div>
+        
+      <label for="DOB">DOB</label>
+      <input type="date" name="DOB" class="form-control" id="DOB" required>
+      <div class="invalid-feedback">
+        DOB is required!
+      </div>
  
       <label for="email">Email</label>
         <input type="email" name="uemail" class="form-control" id="email" required>

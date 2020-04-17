@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -44,10 +45,10 @@ public class admin_salesReports extends HttpServlet {
 		// doGet(request, response);
 		
 		response.setContentType("text/html");
-		
 		PrintWriter out = response.getWriter();
 		
 		int month = Integer.parseInt(request.getParameter("admin-sales-month"));
+		String year = request.getParameter("admin-sales-year");
 		
 		if (month < 1 || month > 12) {
 			out.print("<p class=\"error\">Month must be between 1 and 12!</p>");
@@ -74,11 +75,12 @@ public class admin_salesReports extends HttpServlet {
 			*/
 			
 			String query = "SELECT * FROM Reservations "
-					+ "WHERE month(date) = ?;";
+					+ "WHERE year(date) = ? AND month(date) = ?;";
 			
 			
 			PreparedStatement ps = con.prepareStatement(query);
-			ps.setString(1, String.valueOf(month));
+			ps.setString(1, year);
+			ps.setString(2, String.valueOf(month));
 			
 			ResultSet rs = ps.executeQuery();
 			
@@ -114,11 +116,11 @@ public class admin_salesReports extends HttpServlet {
 				out.print("<tr>");
 				for(int i = 1; i <= numCols; i++) {
 					
-					if(i == 2)
+					if(rsmd.getColumnName(i).contentEquals("bookingFee"))
 						totalBookingFee += Integer.parseInt(rs.getString(i));
-					else if(i == 6)
+					else if(rsmd.getColumnName(i).contentEquals("totalFare"))
 						totalFare += Double.parseDouble(rs.getString(i));
-					else if(i == 7)
+					else if(rsmd.getColumnName(i).contentEquals("total_discount"))
 						totalDiscount += Integer.parseInt(rs.getString(i));
 					
 					out.print("<td>");
@@ -131,11 +133,11 @@ public class admin_salesReports extends HttpServlet {
 			
 			out.print("</table>");
 			
-			out.print("<br><h6>Total Fares: $" + totalFare + "</h6><h6>Total Discount: $" + totalDiscount + "</h6><h6>Total Booking Fee: $" + totalBookingFee + "</h6>");
+			out.print("<br><h6>Total Fares: $" + totalFare + "</h6><h6>Total Discount: $" + totalDiscount + "</h6><h6>Total Booking Fee: $" + totalBookingFee + "</h6><h6>Total Revenue: " + totalFare + totalBookingFee +"</h6>");
 			
 			out.print("</body></html>");
 			
-			ps.executeUpdate();
+			//ps.executeUpdate();
 			ap.closeConnection(con);
 			
 		}

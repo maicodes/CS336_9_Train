@@ -2,7 +2,7 @@ package pkg.Models;
 
 public class Customer {
 	
-	private String firstName, lastName, userName, password, email, telephone, address, city, state, zipcode;
+	private String firstName, lastName, userName, password, email, telephone, address, city, state, zipcode, DOB;
 
 	public String getFirstName() {
 		return firstName;
@@ -82,5 +82,13 @@ public class Customer {
 
 	public void setZipcode(String zipcode) {
 		this.zipcode = zipcode;
+	}
+	
+	public String getDOB() {
+		return DOB;
+	}
+
+	public void setDOB(String dob) {
+		DOB = dob;
 	}
 }

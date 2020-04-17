@@ -23,8 +23,8 @@ public class Auth extends HttpServlet {
 	private ResultSet userInfo;
 	private static Customer loginUser = new Customer();
     
-	private String insert = "INSERT INTO Customers(firstName, lastName, userName, password, email, telephone, address, city, state, zipcode)" 
-							+ "VALUES (?,?,?,?,?,?,?,?,?,?)";
+	private String insert = "INSERT INTO Customers(firstName, lastName, userName, password, email, telephone, address, city, state, zipcode, DOB)" 
+							+ "VALUES (?,?,?,?,?,?,?,?,?,?,?)";
 	private String select = "SELECT * FROM Customers WHERE userName = ?";
     /**
      * @see HttpServlet#HttpServlet()
@@ -134,7 +134,7 @@ public class Auth extends HttpServlet {
 		newUser.setCity(req.getParameter("ucity"));
 		newUser.setState(req.getParameter("ustate"));
 		newUser.setZipcode(req.getParameter("uzip"));
-		
+		newUser.setDOB(req.getParameter("DOB"));
 		
 		
 		try {
@@ -150,7 +150,7 @@ public class Auth extends HttpServlet {
 			ps.setString(8, newUser.getCity());
 			ps.setString(9, newUser.getState());
 			ps.setString(10, newUser.getZipcode());
-			
+			ps.setString(11, newUser.getDOB());
 			ps.executeUpdate();
 			
 			res.sendRedirect(req.getContextPath() + "/index.jsp?creation=success");

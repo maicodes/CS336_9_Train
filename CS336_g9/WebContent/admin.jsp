@@ -110,10 +110,132 @@
 			Customers : Add, Edit, Delete Info
 		 -->
 		<div id="adminCus" aria-hidden="true">
-			<button class="single-toggle-btn btn btn-outline-primary" aria-controls="#adminCus-modal">Add New Customer</button>
+			<button class="single-toggle-btn btn btn-outline-primary" aria-controls="#adminCus-add-modal">Add New Customer</button>
 			<!-- Modal -->
-				<div id="adminCus-modal" aria-hidden="true">
-					Ask TA do we need to create new customer
+				<div id="adminCus-add-modal" aria-hidden="true">
+				<!-- New Customer Form-->
+ 						<form action="admin_Customers" method="post"  class="needs-validation" novalidate>
+ 							  <input type = "hidden" value = "add" name = "type">
+						      <label for="admin-cus-add-firstName">First Name</label>
+						      <input type="text" name="fname" class="form-control" id="admin-cus-add-firstName" placeholder="First name" required>
+						      <div class="invalid-feedback">
+						          Please enter customer's first name!
+						      </div>
+						    
+						      <label for="admin-cus-add-lastName">Last name</label>
+						      <input type="text" name="lname" class="form-control" id="admin-cus-add-lastName" placeholder="Last name" required>
+						      <div class="invalid-feedback">
+						          Please enter customer's last name!
+						      </div>
+						
+						      <label for="admin-cus-add-uName">Username</label>
+						        <input type="text" name="uname" class="form-control" id="admin-cus-add-uName" placeholder="Username" required>
+						        <div class="invalid-feedback">
+						          Please enter customer's user name!
+						        </div>
+						   
+						
+						      <label for="admin-cus-add-pw">Password</label>
+						        <input type="password" name="pw" class="form-control" id="admin-cus-add-pw" placeholder="Password" required>
+						        <div class="invalid-feedback">
+						          Password is required!
+						        </div>
+						        
+						       <label for="admin-cus-add-dob">DOB</label>
+							      <input type="date" name="dob" class="form-control" id="admin-cus-add-dob" required>
+							      <div class="invalid-feedback">
+							        DOB is required!
+							      </div>
+						 
+						      <label for="admin-cus-add-email">Email</label>
+						        <input type="email" name="email" class="form-control" id="admin-cus-add-email">
+			
+						        
+						      <label for="admin-cus-add-phone">Telephone</label>
+						        <input type="text" name="phone" class="form-control" id="phone">
+						 
+						      <label for="admin-cus-add-address">Address</label>
+						      <input type="text" name="address" class="form-control" id="admin-cus-add-address">
+	
+						
+						      <label for="admin-cus-add-city">City</label>
+						      <input type="text" name="city" class="form-control" id="admin-cus-add-city">
+						
+						      <label for="admin-cus-add-state">State</label>
+						      <input type="text" name="state" class="form-control" id="admin-cus-add-state">
+						    
+						      <label for="admin-cus-add-zip">Zip Code</label>
+						      <input type="text" name="zip" class="form-control" id="admin-cus-add-zip" required>
+							  <div class="invalid-feedback">
+							       Zipcode is required!
+							  </div>
+							      
+						      <button type="submit" class="auth-btn btn btn-primary">Submit</button>
+						</form>
+					<!-- End New Customer Form -->
+					</div>
+					
+				<button class="single-toggle-btn btn btn-outline-primary" aria-controls="#adminCus-edit-modal">Edit Customer Information</button>
+				<!-- Modal -->
+				<div id="adminCus-edit-modal" aria-hidden="true">
+				<!-- Edit Customer Form-->
+ 						<form action="admin_Customers" method="post"  class="needs-validation" novalidate>
+ 							  <input type = "hidden" value = "edit" name = "type">
+ 							  <p>Please fill in the user name and other fields that you wish to edit!</p>
+ 							  <label for="admin-cus-edit-uName">Username</label>
+						        <input type="text" name="uname" class="form-control" id="admin-cus-edit-uName" placeholder="Username" required>
+						        <div class="invalid-feedback">
+						          Please enter customer's user name!
+						        </div>
+						      <label for="admin-cus-edit-firstName">First Name</label>
+						      <input type="text" name="fname" class="form-control" id="admin-cus-edit-firstName" placeholder="First name">
+						    
+						      <label for="admin-cus-edit-lastName">Last name</label>
+						      <input type="text" name="lname" class="form-control" id="admin-cus-edit-lastName" placeholder="Last name">
+						   
+						      <label for="admin-cus-edit-pw">Password</label>
+						        <input type="password" name="upassword" class="form-control" id="admin-cus-edit-pw" placeholder="Password">
+						        
+						      <label for="admin-cus-add-dob">DOB</label>
+							      <input type="date" name="dob" class="form-control" id="admin-cus-add-dob">
+						 
+						      <label for="admin-cus-edit-email">Email</label>
+						        <input type="email" name="email" class="form-control" id="admin-cus-edit-email">
+						        
+						      <label for="admin-cus-edit-phone">Telephone</label>
+						        <input type="text" name="phone" class="form-control" id="admin-cus-edit-phone">
+
+						      <label for="admin-cus-edit-address">Address</label>
+						      <input type="text" name="address" class="form-control" id="admin-cus-edit-address">
+						
+						      <label for="admin-cus-edit-city">City</label>
+						      <input type="text" name="city" class="form-control" id="admin-cus-edit-city">
+						
+						      <label for="admin-cus-edit-state">State</label>
+						      <input type="text" name="state" class="form-control" id="admin-cus-edit-state">
+						    
+						      <label for="admin-cus-edit-zip">Zip Code</label>
+						      <input type="text" name="zip" class="form-control" id="admin-cus-edit-zip">
+						
+						      <button type="submit" class="auth-btn btn btn-primary">Submit</button>
+						</form> 
+					<!-- End Edit Customer Form -->
+				</div>
+				
+				<button class="single-toggle-btn btn btn-outline-primary" aria-controls="#adminCus-del-modal">Delete Customer Information</button>
+				<!-- Modal -->
+				<div id="adminCus-del-modal" aria-hidden="true">
+				<!-- Delete Customer Form-->
+ 						<form action="admin_Customers" method="post"  class="needs-validation" novalidate>
+ 							  <input type = "hidden" value = "del" name = "type">
+						      <label for="admin-cus-del-uName">Username</label>
+						        <input type="text" name="uname" class="form-control" id="admin-cus-del-uName" placeholder="Username" required>
+						        <div class="invalid-feedback">
+						          Please enter customer's user name!
+						        </div>
+						      <button type="submit" class="auth-btn btn btn-primary">Submit</button>
+						</form> 
+					<!-- End Delete Customer Form -->
 				</div>
     		<br>
     		<h3>List of all customers:</h3>
@@ -128,8 +250,10 @@
 			<h3>Obtain sales reports by months:</h3>
     		<form action="admin_salesReports" method="post">
     			<div class="form-group">
-					<label for="admin-sales">Select a month: </label>
-					<input type="number" class="form-control" id="admin-sales" name="admin-sales-month">
+    				<label for="admin-sales-y">Select a year: </label>
+					<input type="number" class="form-control" id="admin-sales-y" name="admin-sales-year">
+					<label for="admin-sales-m">Select a month: </label>
+					<input type="number" class="form-control" id="admin-sales-m" name="admin-sales-month">
 				</div>
 				  <button type="submit" class="btn btn-primary">Submit</button>
     		</form>
@@ -139,20 +263,15 @@
 			Reservations
 		-->
 		<div id="adminReservations" aria-hidden="true">
-			<h5>Get a list of reservations by transit line:</h5>
+			<h5>Get a list of reservations by transit line and train number:</h5>
     		<form action="admin_reservations" method="post">
     			<div class="form-group">
 					<label for="admin-res-transitLine">Transit Line Name: </label>
 					<input type="text" class="form-control" id="admin-res-transitLine" name="admin-res-tran">
-				</div>
-				  <button type="submit" class="btn btn-outline-primary">Submit</button>
-    		</form>
-    		<br>
-    		<h5>Get a list of reservations by train number:</h5>
-    		<form action="admin_reservations" method="post">
-    			<div class="form-group">
+					<div class="form-group">
 					<label for="admin-res-train">Train Number: </label>
 					<input type="number" class="form-control" id="admin-res-train" name="admin-res-train">
+				</div>
 				</div>
 				  <button type="submit" class="btn btn-outline-primary">Submit</button>
     		</form>
@@ -160,8 +279,10 @@
     		<h5>Get a list of reservations by customer name:</h5>
     		<form action="admin_reservations" method="post">
     			<div class="form-group">
-					<label for="admin-res-cus">Customer Name: </label>
-					<input type="text" class="form-control" id="admin-res-cus" name="admin-res-cus">
+					<label for="admin-res-fname">First Name: </label>
+					<input type="text" class="form-control" id="admin-res-fname" name="admin-res-fname">
+					<label for="admin-res-lname">Last Name: </label>
+					<input type="text" class="form-control" id="admin-res-lname" name="admin-res-lname">
 				</div>
 				  <button type="submit" class="btn btn-outline-primary">Submit</button>
     		</form>
@@ -171,16 +292,71 @@
 			Revenue
 		-->
 		<div id="adminRevenue" aria-hidden="true">
-				[] Produce a listing of revenue per:
-				 [] transit line
-				 [] destination city
-				 [] customer name
-				 [] best customer
-				 [] best 5 most active transit lines 
+				<div> 
+				<h3>Get The Best Customer</h3>
+			    		<form action="admin_revenue" method="post">
+			    			  <input type="hidden" name="type" value="bestCustomer"></input>
+							  <button type="submit" class="btn btn-outline-primary">Click Here</button>
+			    		</form> 
+			    </div>
+			    
+			    <br>
+			    
+			    <div> 
+			    <h3>Get Best 5 Most Active Transit Lines </h3>
+			    		<form action="admin_revenue" method="post">
+			    			  <input type="hidden" name="type" value="5mostActiveTransitLine"></input>
+							  <button type="submit" class="btn btn-outline-primary">Click Here</button>
+			    		</form> 
+			    </div>
+			    
+			    <br>
+				 
+				<h1> Produce a listing of revenue per: </h1>
+				<div> 
+					<h5>Transit Line</h5>
+			    		<form action="admin_revenue" method="post">
+			    			<input type="hidden" name="type" value="revByTransitLine"></input>
+			    			<div class="form-group">
+								<label for="admin-rev-tran">Transit Line Name: </label>
+								<input type="text" class="form-control" id="admin-rev-tran" name="transitLine">
+							</div>
+							  <button type="submit" class="btn btn-outline-primary">Submit</button>
+			    		</form> 
+			    </div>
+			    
+			    <br>
+			    
+			    <div> 
+			    	<h5>Destination City</h5>
+			    		<form action="admin_revenue" method="post">
+			    			<input type="hidden" name="type" value="revByCity"></input>
+			    			<div class="form-group">
+								<label for="admin-rev-city">City Name: </label>
+								<input type="text" class="form-control" id="admin-rev-city" name="city">
+							</div>
+							  <button type="submit" class="btn btn-outline-primary">Submit</button>
+			    		</form> 
+			    </div>
+			    
+			    <br>
+			    
+			   <div> 
+			   		<h5>Customer Name</h5>
+			    		<form action="admin_revenue" method="post">
+			    			<input type="hidden" name="type" value="revByCity"></input>
+			    			<div class="form-group">
+								<label for="admin-rev-fname">Customer First Name: </label>
+								<input type="text" class="form-control" id="admin-rev-fname" name="fname">
+								<label for="admin-rev-lname">Customer Last Name: </label>
+								<input type="text" class="form-control" id="admin-rev-lname" name="lname">
+							</div>
+							  <button type="submit" class="btn btn-outline-primary">Submit</button>
+			    		</form> 
+			    </div>
 		</div>
-	</div>
-	</div>
-
+</div>
+</div>
 </div>
 
 <jsp:include page="footer.jsp"/>
