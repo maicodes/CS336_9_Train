@@ -213,6 +213,13 @@ public class Common {
 		}
 	}
 	
+	/***
+	 * Prints out a SQL result.
+	 * @param rs : The SQL result, usually the return value from the excecuteQuery() or executeUpdate() functions 
+	 * @param res : servlet response
+	 * @param headline : The headline above the result table, saying what the SQL result is about. For example: "Return the best customer"
+	 * @throws SQLException
+	 */
 	public static void printSQLResultTable(ResultSet rs, HttpServletResponse res, String headline) throws SQLException {
 		res.setContentType("text/html");
 		try {
