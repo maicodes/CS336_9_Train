@@ -247,7 +247,7 @@
 			Obtain sales reports for a particular month
 		-->
 		<div id="adminSaleReports" aria-hidden="true">
-			<h3>Obtain sales reports by months:</h3>
+			<h3>Obtain sales report for a particular month:</h3>
     		<form action="admin_salesReports" method="post">
     			<div class="form-group">
     				<label for="admin-sales-y">Select a year: </label>
@@ -314,44 +314,30 @@
 				 
 				<h1> Produce a listing of revenue per: </h1>
 				<div> 
-					<h5>Transit Line</h5>
+					 <h3>Transit Line:</h3>
 			    		<form action="admin_revenue" method="post">
 			    			<input type="hidden" name="type" value="revByTransitLine"></input>
-			    			<div class="form-group">
-								<label for="admin-rev-tran">Transit Line Name: </label>
-								<input type="text" class="form-control" id="admin-rev-tran" name="transitLine">
-							</div>
-							  <button type="submit" class="btn btn-outline-primary">Submit</button>
+							  <button type="submit" class="btn btn-outline-primary">Click Here</button>
 			    		</form> 
 			    </div>
 			    
 			    <br>
 			    
 			    <div> 
-			    	<h5>Destination City</h5>
+			    		<h3>Destination City:</h3>
 			    		<form action="admin_revenue" method="post">
 			    			<input type="hidden" name="type" value="revByCity"></input>
-			    			<div class="form-group">
-								<label for="admin-rev-city">City Name: </label>
-								<input type="text" class="form-control" id="admin-rev-city" name="city">
-							</div>
-							  <button type="submit" class="btn btn-outline-primary">Submit</button>
+							  <button type="submit" class="btn btn-outline-primary">Click Here</button>
 			    		</form> 
 			    </div>
 			    
 			    <br>
 			    
 			   <div> 
-			   		<h5>Customer Name</h5>
+			   			<h3>Customer Name:</h3>
 			    		<form action="admin_revenue" method="post">
-			    			<input type="hidden" name="type" value="revByCity"></input>
-			    			<div class="form-group">
-								<label for="admin-rev-fname">Customer First Name: </label>
-								<input type="text" class="form-control" id="admin-rev-fname" name="fname">
-								<label for="admin-rev-lname">Customer Last Name: </label>
-								<input type="text" class="form-control" id="admin-rev-lname" name="lname">
-							</div>
-							  <button type="submit" class="btn btn-outline-primary">Submit</button>
+			    			<input type="hidden" name="type" value="revByCus"></input>
+							  <button type="submit" class="btn btn-outline-primary">Click Here</button>
 			    		</form> 
 			    </div>
 		</div>

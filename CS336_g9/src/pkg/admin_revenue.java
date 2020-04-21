@@ -79,21 +79,96 @@ public class admin_revenue extends HttpServlet {
 		 * GET TOP 5 ACTIVE TRANSIT LINES
 		 * 
 		 * */
+		else if (req.getParameter("type").contentEquals("5mostActiveTransitLine")) {
+			try {
+				String query = 
+						"SELECT * " + 
+						"FROM (" +
+							"SELECT transitLine \"Transit Line\", count(*) \"Total Number of Reservations\" " + 
+							"FROM (SELECT t1.train_id, t.transitLine_Name transitLine " + 
+								"FROM ( " + 
+									"SELECT s.train_id " + 
+									"FROM Reservations r, Stops s " + 
+									"WHERE r.originStop_id = s.stop_id) t1, Trains t " + 
+								"WHERE t.t_id = t1.train_id) train_transitLine " + 
+								"GROUP BY train_transitLine.transitLine) t2 " + 
+						"ORDER BY \"Total Number of Reservations\" DESC " + 
+						"LIMIT 5;";
+				Statement sm = con.createStatement();
+				ResultSet rs = sm.executeQuery(query);
+				Common.printSQLResultTable(rs, res, "Report of top 5 most active transit line");
+			} catch(SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
 		
 		/*
 		 * GET REVENUE BY TRANSIT LINE
 		 * 
 		 * */
+		else if (req.getParameter("type").equals("revByTransitLine")) {
+			try {
+				String query = "SELECT t.transitLine_Name, sum(t1.bookingFee) \"Total Booking Fee\", sum(t1.totalFare) \"Total Fare\", (sum(t1.bookingFee) + sum(t1.totalFare)) \"Total Revenue\" " + 
+						"FROM " + 
+						"	(SELECT s.train_id, r.bookingFee, r.totalFare " + 
+						"	FROM Reservations r, Stops s " + 
+						"	WHERE r.originStop_id = s.stop_id) t1, Trains t " + 
+						"WHERE t1.train_id = t.t_id " + 
+						"GROUP BY t.transitLine_Name";
+				Statement sm = con.createStatement();
+				ResultSet rs = sm.executeQuery(query);
+				Common.printSQLResultTable(rs, res, "List of revenue per transit line:");
+			}
+			catch (SQLException e) {
+				e.printStackTrace();
+			}
+			
+		}
 		
 		/*
 		 * GET REVENUE BY DESTINATION CITY
 		 * 
 		 * */
+		else if (req.getParameter("type").equals("revByCity")) {
+			try {
+				String query = "SELECT s.station_name, sum(t1.bookingFee) \"Total Booking Fee\", sum(t1.totalFare) \"Total Fare\", (sum(t1.bookingFee) + sum(t1.totalFare)) \"Total Revenue\" " + 
+						"FROM " + 
+						"	(SELECT s.station_id, r.bookingFee, r.totalFare " + 
+						"	FROM Reservations r, Stops s " + 
+						"	WHERE r.destinationStop_id = s.stop_id) t1, Stations s " + 
+						"WHERE t1.station_id = s.station_id " + 
+						"GROUP BY s.station_name";
+				Statement sm = con.createStatement();
+				ResultSet rs = sm.executeQuery(query);
+				Common.printSQLResultTable(rs, res, "List of revenue per destination city:");
+			}
+			catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
 		
 		/*
 		 * GET REVENUE BY CUSTOMER
 		 * 
 		 * */
+		else if (req.getParameter("type").equals("revByCus")) {
+			try {
+				String query = "SELECT t1.userName \"User Name\", c.firstName \"First Name\", c.lastName \"Last Name\", sum(t1.bookingFee) \"Total Booking Fee\", sum(t1.totalFare) \"Total Fare\", (sum(t1.bookingFee) + sum(t1.totalFare)) \"Total Revenue\" " + 
+						"FROM " + 
+						"	(SELECT b.userName, r.bookingFee, r.totalFare" + 
+						"	FROM Reservations r, Bookings b " +
+						"    WHERE r.rid = b.rid) t1, Customers c " + 
+						"WHERE t1.userName = c.userName " + 
+						"GROUP BY t1.userName";
+				Statement sm = con.createStatement();
+				ResultSet rs = sm.executeQuery(query);
+				Common.printSQLResultTable(rs, res, "List of revenue per customer:");
+			}
+			catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
 		
 		ap.closeConnection(con);
 	}
