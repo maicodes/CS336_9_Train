@@ -102,14 +102,14 @@
 			<!-- End New Employee Form -->
 		
     		<br>
-    		<h3>List of all employees:</h3>
-    		<jsp:include page="admin_employees.jsp"/>
+    		<h3>List of all employees:</h3>	
+    		<jsp:include page="admin_employees.jsp"/> 
 		</div>
 		
 		<!-- 
 			Customers : Add, Edit, Delete Info
 		 -->
-		<div id="adminCus" aria-hidden="true">
+		<div id="adminCus" aria-hidden="true" >
 			<button class="single-toggle-btn btn btn-outline-primary" aria-controls="#adminCus-add-modal">Add New Customer</button>
 			<!-- Modal -->
 				<div id="adminCus-add-modal" aria-hidden="true">

@@ -3,22 +3,19 @@
 <%@ page import="pkg.*"%>
 <%@ page import="java.io.*,java.util.*,java.sql.*"%>
 <%@ page import="javax.servlet.http.*,javax.servlet.*" %>
-
-		<%
+ <%
 				List<String> list = new ArrayList<String>();
 		
 				try {
-		
-					//Get the database connection
+					
 					ApplicationDB db = new ApplicationDB();	
 					Connection con = db.getConnection();	
 					
 					//Create a SQL statement
 					Statement stmt = con.createStatement();
-					//Make a SELECT query from the sells table with the price range specified by the 'price' parameter at the index.jsp
-					String str = "SELECT * FROM Customers";
-					//Run the query against the database.
-					ResultSet result = stmt.executeQuery(str);
+						String str = "SELECT * FROM Customers";
+						//Run the query against the database.
+						ResultSet result = stmt.executeQuery(str);
 		%>
 	<!-- Make an HTML table to show the results: -->
 		<table class="table table-striped">
@@ -27,7 +24,6 @@
 			      <th scope="col">User Name</th>
 			      <th scope="col">First Name</th>
 			      <th scope="col">Last Name</th>
-			      <th scope="col">Password</th>
 			      <th scope="col">Address</th>
 			      <th scope="col">City</th>
 			      <th scope="col">State</th>
@@ -55,10 +51,6 @@
 						
 						out.print("<td>");
 						out.print(result.getString("lastName"));
-						out.print("</td>");
-						
-						out.print("<td>");
-						out.print(result.getString("password"));
 						out.print("</td>");
 						
 						out.print("<td>");
@@ -99,4 +91,5 @@
 				}
 			%>
 		</tbody>
-		</table>
+		</table>  
+ 

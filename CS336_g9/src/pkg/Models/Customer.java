@@ -2,7 +2,7 @@ package pkg.Models;
 
 public class Customer {
 	
-	private String firstName, lastName, userName, password, email, telephone, address, city, state, zipcode, DOB;
+	private String firstName, lastName, userName, email, telephone, address, city, state, zipcode, DOB;
 
 	public String getFirstName() {
 		return firstName;
@@ -26,14 +26,6 @@ public class Customer {
 
 	public void setUserName(String userName) {
 		this.userName = userName;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
 	}
 
 	public String getEmail() {

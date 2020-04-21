@@ -2,7 +2,7 @@
 <%@ page import = "pkg.Models.Customer" %>
 <%
 	Customer user = new Customer();
-	if (Auth.isLoggedIn())
+	if (Auth.isLoggedIn(request))
 	{
 		user = Auth.getLoginUser();
 	}
@@ -20,7 +20,7 @@
         <a class="nav-link" href="">
         Welcome
        <%
-        	if (Auth.isLoggedIn())
+        	if (Auth.isLoggedIn(request))
         	{
         		out.println(user.getFirstName() + " " + user.getLastName());
         	}
@@ -32,7 +32,7 @@
         <span class="sr-only"></span></a>
       </li>
       <li class="nav-item">
-      	<% if (!Auth.isLoggedIn()) {%>
+      	<% if (!Auth.isLoggedIn(request)) {%>
         	<a class="nav-link" href="auth.jsp">Log In</a>
         <% } else { %>
         	<a class = "nav-link" href="Auth?action=logout">Log Out</a>
