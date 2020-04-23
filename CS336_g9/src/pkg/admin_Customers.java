@@ -7,7 +7,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -20,9 +19,10 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/admin_Customers")
 public class admin_Customers extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private String insert = "INSERT INTO Customers(firstName, lastName, userName, password, email, telephone, address, city, state, zipcode, DOB)" 
-			+ "VALUES (?,?,?,?,?,?,?,?,?,?,?)";
-	private String delete = "DELETE FROM Customers WHERE userName = ?";
+	private String insertUser = "INSERT INTO User (userName, password, role) VALUES (?,?,?);";
+	private String insertCustomer = "INSERT INTO Customers(firstName, lastName, userName, email, telephone, address, city, state, zipcode, DOB)" 
+			+ "VALUES (?,?,?,?,?,?,?,?,?,?)";
+	private String delete = "DELETE FROM User WHERE userName = ?";
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -56,20 +56,39 @@ public class admin_Customers extends HttpServlet {
 		
 		if (req.getParameter("type").contentEquals("add")) {
 			try {
-				PreparedStatement ps = con.prepareStatement(insert);
-				ps.setString(1, req.getParameter("fname"));
-				ps.setString(2, req.getParameter("lname"));
-				ps.setString(3, req.getParameter("uname"));
-				ps.setString(4, req.getParameter("pw"));
-				ps.setString(5, req.getParameter("email"));
-				ps.setString(6, req.getParameter("phone"));
-				ps.setString(7, req.getParameter("address"));
-				ps.setString(8, req.getParameter("city"));
-				ps.setString(9, req.getParameter("state"));
-				ps.setString(10, req.getParameter("zip"));
-				ps.setString(11, req.getParameter("dob"));
+				String fname = req.getParameter("fname");
+				String lname = req.getParameter("lname");
+				String uname = req.getParameter("uname");
+				String pw = req.getParameter("pw");
+				String email =  req.getParameter("email");
+				String phone =  req.getParameter("phone");
+				String address = req.getParameter("address");
+				String city = req.getParameter("city");
+				String state = req.getParameter("state");
+				String zip = req.getParameter("zip");
+				String dob = req.getParameter("dob");
 
+				// Create a new user 
+				PreparedStatement insertUsertatement = con.prepareStatement(insertUser);
+				insertUsertatement.setString(1, uname);
+				insertUsertatement.setString(2, pw);
+				insertUsertatement.setString(3, "Customer");
+				insertUsertatement.executeUpdate();
+				
+				// Create a new customer with the user name
+				PreparedStatement ps = con.prepareStatement(insertCustomer);
+				ps.setString(1, fname);
+				ps.setString(2, lname);
+				ps.setString(3, uname);
+				ps.setString(4, email);
+				ps.setString(5, phone);
+				ps.setString(6, address);
+				ps.setString(7, city);
+				ps.setString(8, state);
+				ps.setString(9, zip);
+				ps.setString(10, dob);
 				ps.executeUpdate();
+				
 				res.sendRedirect(req.getContextPath() + "/admin.jsp#adminCus");
 				ap.closeConnection(con);
 
@@ -78,7 +97,9 @@ public class admin_Customers extends HttpServlet {
 				e.printStackTrace();
 			}	
 		} else if (req.getParameter("type").contentEquals("edit")) {
-			String userName = req.getParameter("uname");
+			// Edit customer information
+			String uname = req.getParameter("uname");
+			String newUname = req.getParameter("new-uname");
 			String fname = req.getParameter("fname");
 			String lname = req.getParameter("lname");
 			String pass = req.getParameter("pw");
@@ -90,70 +111,96 @@ public class admin_Customers extends HttpServlet {
 			String zip = req.getParameter("zip");
 			String phone = req.getParameter("phone");
 			
-			String editStatement = "UPDATE Customers";
-			boolean isFirst = true;
-			
-			if (!fname.isEmpty()) {
-				editStatement += " SET firstName = \"" + fname +"\"";
+			if (Common.StringIsNotEmpty(newUname) || Common.StringIsNotEmpty(pass)) {
+				// update User table
+				ArrayList<String> columns = new ArrayList<String>();
+				ArrayList<String> values = new ArrayList<String>();
+						
+						if(Common.StringIsNotEmpty(newUname)) {
+							columns.add("userName");
+							values.add(newUname);
+						}
+						
+						if(Common.StringIsNotEmpty(pass)) {
+							columns.add("password");
+							values.add(pass);
+						}
+						
+						String editUserStatement = Common.createEditStatement("User", columns, values, " WHERE userName = " + "\"" + uname + "\"");
+						System.out.println(editUserStatement);
+						
+						try {
+							Statement sm = con.createStatement();
+							sm.executeUpdate(editUserStatement);
+						} catch(Exception e) {
+							e.printStackTrace();
+						}
 			}
 			
-			if (!lname.isEmpty()) {
-				editStatement = isFirst ? editStatement + " SET lastName = \"" + lname + "\"" : editStatement + ", lastName = \"" + lname + "\"";
-				isFirst = isFirst ? false : false;
+			ArrayList<String> columns = new ArrayList<String>();
+			ArrayList<String> values = new ArrayList<String>();
+			
+			if (Common.StringIsNotEmpty(fname)) {
+				columns.add("firstName");
+				values.add(fname);
 			}
 			
-			if (pass != null) {
-				editStatement = isFirst ? editStatement + " SET password = \"" + pass + "\"" : editStatement + ", password = \"" + pass + "\"";
-				isFirst = isFirst ? false : false;
+			if (Common.StringIsNotEmpty(lname)) {
+				columns.add("lastName");
+				values.add(lname);
 			}
 			
-			if (!email.isEmpty()) {
-				editStatement = isFirst ? editStatement + " SET email = \"" + email + "\"" : editStatement + ", email = \"" + email + "\"";
-				isFirst = isFirst ? false : false;
+			
+			if (Common.StringIsNotEmpty(email)) {
+				columns.add("email");
+				values.add(email);
 			}
 			
-			if (!dob.isEmpty()) {
-				editStatement = isFirst ? editStatement + " SET dob = \"" + dob + "\"" : editStatement + ", dob = \"" + dob + "\"";
-				isFirst = isFirst ? false : false;
+			if (Common.StringIsNotEmpty(dob)) {
+				columns.add("DOB");
+				values.add(dob);
 			}
 			
-			if (!address.isEmpty()) {
-				editStatement = isFirst ? editStatement + " SET address = \"" + address + "\"" : editStatement + ", address = \"" + address + "\"";
-				isFirst = isFirst ? false : false;
+			if (Common.StringIsNotEmpty(address)) {
+				columns.add("address");
+				values.add(address);
 			}
 			
-			if (!city.isEmpty()) {
-				editStatement = isFirst ? editStatement + " SET city = \"" + city + "\"" : editStatement + ", city = \"" + city + "\"";
-				isFirst = isFirst ? false : false;
+			if (Common.StringIsNotEmpty(city)) {
+				columns.add("city");
+				values.add(city);
 			}
 			
-			if (!state.isEmpty()) {
-				editStatement = isFirst ? editStatement + " SET state = \"" + state + "\"" : editStatement + ", state = \"" + state + "\"";
-				isFirst = isFirst ? false : false;
+			if (Common.StringIsNotEmpty(state)) {
+				columns.add("state");
+				values.add(state);
 			}
 			
-			if (!zip.isEmpty()) {
-				editStatement = isFirst ? editStatement + " SET zipcode = \"" + zip + "\"" : editStatement + ", zipcode = \"" + zip + "\"";
-				isFirst = isFirst ? false : false;
+			if (Common.StringIsNotEmpty(zip)) {
+				columns.add("zip");
+				values.add(zip);
 			}
 			
-			if (!phone.isEmpty()) {
-				editStatement = isFirst ? editStatement + " SET telephone = \"" + phone + "\"" : editStatement + ", telephone = \"" + phone + "\"";
-				isFirst = isFirst ? false : false;
+			if (Common.StringIsNotEmpty(phone)) {
+				columns.add("telephone");
+				values.add(phone);
 			} 
 			
-			editStatement += " WHERE userName = \"" + userName + "\"";
-			
-			System.out.print(editStatement);
-			
-			try {
-				Statement sm = con.createStatement();
-				sm.executeUpdate(editStatement);
-				res.sendRedirect(req.getContextPath() + "/admin.jsp#adminCus");
-				ap.closeConnection(con);
-			} catch(SQLException e) {
-				e.printStackTrace();
-			}	
+			if (columns.size() != 0) {
+				uname = Common.StringIsNotEmpty(newUname) ? newUname : uname;
+				String editStatement = Common.createEditStatement("Customers", columns, values, " WHERE userName = " + "\"" + uname + "\"");
+				
+				System.out.print(editStatement);
+				
+				try {
+					Statement sm = con.createStatement();
+					sm.executeUpdate(editStatement);
+					res.sendRedirect(req.getContextPath() + "/admin.jsp");
+					ap.closeConnection(con);
+				} catch(SQLException e) {
+					e.printStackTrace();
+				}	
+			}
 			
 		} else {
 			try {
@@ -161,7 +208,7 @@ public class admin_Customers extends HttpServlet {
 				ps.setString(1, req.getParameter("uname"));
 
 				ps.executeUpdate();
-				res.sendRedirect(req.getContextPath() + "/admin.jsp#adminCus");
+				res.sendRedirect(req.getContextPath() + "/admin.jsp");
 				ap.closeConnection(con);
 
 			} catch (SQLException e) {

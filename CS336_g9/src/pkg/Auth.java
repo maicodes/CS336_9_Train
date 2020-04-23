@@ -69,12 +69,12 @@ public class Auth extends HttpServlet {
 				String password = request.getParameter("password");
 				String userValidate = authenticateUser (userName, password);
 				
-				if( userValidate.contentEquals("Admin")) {
+				if( userValidate.contentEquals("Manager")) {
 					
 					// Create a new session
 					HttpSession session = request.getSession();
 					session.setAttribute("login", "T");
-					session.setAttribute("Admin", userName);
+					session.setAttribute("Manager", userName);
 					request.setAttribute("userName", userName);
 					request.getRequestDispatcher("/admin.jsp").forward(request, response);
 					

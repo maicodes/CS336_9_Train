@@ -216,7 +216,7 @@ public class Common {
 	/***
 	 * Prints out a SQL result.
 	 * @param rs : The SQL result, usually the return value from the excecuteQuery() or executeUpdate() functions 
-	 * @param res : servlet response
+	 * @param res : httpServlet response
 	 * @param headline : The headline above the result table, saying what the SQL result is about. For example: "Return the best customer"
 	 * @throws SQLException
 	 */
@@ -269,5 +269,39 @@ public class Common {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	/***
+	 * Creates an update statement. For example: UPDATE TABLE ? SET ? = ? WHERE c = d.
+	 * @param table : the table name. 
+	 * @param columns : ArrayList of the column names that will be updated, for example userName. 
+	 * @param values : Array List of new values. 
+	 * @param condition : note that the condition must be a full statement. For example: WHERE userName = "Joe" 
+	 */
+	public static String createEditStatement (String table, ArrayList<String> columns, ArrayList<String> values, String condition) {
+		String updateQuery = "UPDATE " + table + " SET ";
+		StringBuilder editStatement = new StringBuilder(updateQuery);
+		int numCols = columns.size();
+		
+		for(int i = 0; i < numCols; i++) {
+			String s = columns.get(i) + " = " + "\"" + values.get(i) + "\"";
+			if( i != numCols - 1) 	
+				s += ", ";
+			editStatement.append(s);
+		}
+		
+		editStatement.append(condition);
+		return editStatement.toString();
+	}
+	
+	/***
+	 * Checks whether a string is null or empty
+	 * @param s : string
+	 * @return
+	 */
+	public static boolean StringIsNotEmpty (String s) {
+		if (s == null || s.isBlank())
+			return false;
+		return true;
 	}
 }

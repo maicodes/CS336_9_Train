@@ -28,7 +28,6 @@
 			      <th scope="col">First Name</th>
 			      <th scope="col">Last Name</th>
 			      <th scope="col">User Name</th>
-			      <th scope="col">Password</th>
 			    </tr>
 			  </thead>
 			  <tbody>
@@ -53,10 +52,6 @@
 						
 						out.print("<td>");
 						out.print(result.getString("userName"));
-						out.print("</td>");
-						
-						out.print("<td>");
-						out.print(result.getString("password"));
 						out.print("</td>");
 						
 						out.print("</tr>");

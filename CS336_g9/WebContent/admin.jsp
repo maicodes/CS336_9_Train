@@ -1,7 +1,15 @@
 <%@ page import="pkg.*"%>
 <jsp:include page="header.jsp"/>
 
-<!-- This web page implements Customer Representative functionalities -->
+
+<% // if Manager session is not set - user havent logined as admin, redirect to index.jsp
+if((request.getSession(false).getAttribute("Manager")== null) )
+{
+%>
+<jsp:forward page="/"></jsp:forward>
+<%} %>
+
+<!-- This web page implements Admin/Manager functionalities -->
 <div id="admin">
 	<div class="row">
 	<div class="col-2 vertical-nav-con">
@@ -29,6 +37,7 @@
 				    		<div id="adminEmp-add-modal" aria-hidden="true">
 				    			<h5>Add New Employee</h5>
 				    			<form action="admin_Employees" method="post">
+				    			
 									  <div class="form-group">
 									    <label for="admin-emp-ssn">SSN</label>
 									    <input type="text" class="form-control" id="admin-emp-ssn" name="add-emp-ssn">
@@ -49,6 +58,14 @@
 									    <label for="admin-emp-pass">Password</label>
 									    <input type="password" class="form-control" id="admin-emp-pass" name="emp-pass">
 									  </div>
+									  <div class="form-group">
+									   <label for="admin-emp-role">Role</label>
+									   <select id="admin-emp-role" name="emp-role">
+									   		<option value="Manager">Manager</option>
+									   		<option value="CusRep">Customer Representative</option>
+									   </select>
+									  </div>
+									  
 									  <button type="submit" class="btn btn-primary">Submit</button>
 								</form>
 				    		</div>
@@ -74,12 +91,19 @@
 			<!-- Edit Employee Form -->
 				    		<div id="adminEmp-edit-modal" aria-hidden="true">
 				    			<h5>Edit Employee Information</h5>
-				    			<form action="admin_Employees" method="post">
+				    			<form action="admin_Employees" method="post" class="needs-validation" novalidate>
 									  <div class="form-group">
 									    <label for="admin-emp-edit-ssn">Select an employee's ssn to edit: </label>
-									    <input type="text" class="form-control" id="admin-emp-edit-ssn" name="edit-emp-ssn">
+									    <input type="text" class="form-control" id="admin-emp-edit-ssn" name="edit-emp-ssn" required>
+									    <div class="invalid-feedback">
+        									SSN cannot be empty
+      									</div>
 									  </div>
 									  <h6>Select one or more fields to edit:</h6>
+									  <div class="form-group">
+									    <label for="admin-emp-edit-new-ssn">SSN</label>
+									    <input type="text" class="form-control" id="admin-emp-edit-new-ssn" name="emp-new-ssn">
+									  </div>
 									  <div class="form-group">
 									    <label for="admin-emp-fname">First Name</label>
 									    <input type="text" class="form-control" id="admin-emp-edit-fname" name="emp-fname">
@@ -96,10 +120,11 @@
 									    <label for="admin-emp-pass">Password</label>
 									    <input type="password" class="form-control" id="admin-emp-edit-pass" name="emp-pass">
 									  </div>
+									  
 									  <button type="submit" class="btn btn-primary">Submit</button>
 								</form>
 				    		</div>
-			<!-- End New Employee Form -->
+			<!-- End Edit Employee Form -->
 		
     		<br>
     		<h3>List of all employees:</h3>	
@@ -182,15 +207,19 @@
  						<form action="admin_Customers" method="post"  class="needs-validation" novalidate>
  							  <input type = "hidden" value = "edit" name = "type">
  							  <p>Please fill in the user name and other fields that you wish to edit!</p>
- 							  <label for="admin-cus-edit-uName">Username</label>
+ 							  <label for="admin-cus-edit-uName">User Name</label>
 						        <input type="text" name="uname" class="form-control" id="admin-cus-edit-uName" placeholder="Username" required>
 						        <div class="invalid-feedback">
 						          Please enter customer's user name!
 						        </div>
+						        
+						      <label for="admin-cus-edit-new-uname">New User Name</label>
+						      <input type="text" name="new-uname" class="form-control" id="admin-cus-edit-new-uname" placeholder="User name">
+						      
 						      <label for="admin-cus-edit-firstName">First Name</label>
 						      <input type="text" name="fname" class="form-control" id="admin-cus-edit-firstName" placeholder="First name">
 						    
-						      <label for="admin-cus-edit-lastName">Last name</label>
+						      <label for="admin-cus-edit-lastName">Last Name</label>
 						      <input type="text" name="lname" class="form-control" id="admin-cus-edit-lastName" placeholder="Last name">
 						   
 						      <label for="admin-cus-edit-pw">Password</label>
