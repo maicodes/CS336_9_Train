@@ -13,6 +13,8 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Duration;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -31,7 +33,35 @@ public class Common {
 	public Common() {
 		super();
 	}
+	//t1 - t2, so t1 should be later!
+	public long difference(String t2, String t1)
+	{
+		
+		LocalTime time1 = LocalTime.parse(t1);
+		LocalTime time2 = LocalTime.parse(t2);
+		Duration timeElapsed = Duration.between(time1, time2);
+		
+		return timeElapsed.toMinutes();
+	}
+	public String dbDate() {
+		return "2020-04-15 ";
+	}
 	
+	public String getStopId(String time, String train) throws SQLException{
+		String sql_time = getSqlDate(dbDate(), time);
+		String SQL = "SELECT stop_id " + 
+				"FROM Stops " + 
+				"WHERE arrive_time = ? " + 
+				"AND train_id = ?";
+		PreparedStatement ps = c.prepareStatement(SQL);
+		ps.setString(1, sql_time);
+		ps.setString(2, train);
+		
+		ResultSet rs = ps.executeQuery();
+		
+		rs.next();
+		return rs.getString(1);
+	}
 	
 	public String stripTime(String time) //When you get a datetime from sql, this returns HH:mm
 	{
@@ -203,14 +233,56 @@ public class Common {
         }
     }
 	
-	public static void main(String[] args) throws ParseException
+	public static void main(String[] args) throws ParseException, SQLException
 	{
-		Common c = new Common();
-		System.out.println(c.getToday());
-		for (String s : c.getWeek())
+		Common lib = new Common();
+		
+		System.out.println(lib.getStopId("05:00", "1001"));
+	}
+	
+	public String transit_line_for_stations(String origin, String destination) throws SQLException
+	{
+		String SQL = "SELECT DISTINCT station_name, Trains.transitLine_Name " + 
+				"FROM Stops " + 
+				"JOIN Stations " + 
+				"ON Stops.station_id = Stations.station_id " + 
+				"JOIN Trains " + 
+				"ON Trains.t_id = Stops.train_id " + 
+				"WHERE station_name = ? OR station_name = ?;";
+		PreparedStatement ps = c.prepareStatement(SQL);
+		ps.setString(1, origin);
+		ps.setString(2, destination);
+		
+		ResultSet rs = ps.executeQuery();
+		ArrayList<String> potential_lines = new ArrayList<String>();
+		String line;
+		
+		while (rs.next())
 		{
-			System.out.println(s);
+			if (potential_lines.contains(rs.getString("transitLine_Name")))
+			{
+				line = rs.getString("transitLine_Name");
+				return line;
+			}
+			else
+			{
+				potential_lines.add(rs.getString("transitLine_Name"));
+			}
 		}
+		
+		String fallback = "SELECT DISTINCT Trains.transitLine_Name " + 
+				"FROM Trains " + 
+				"JOIN Stops " + 
+				"ON Stops.train_id = Trains.t_id " + 
+				"JOIN Stations " + 
+				"ON Stations.station_id = Stops.station_id " + 
+				"WHERE station_name = ?";
+		
+		ps = c.prepareStatement(fallback);
+		ps.setString(1, origin);
+		rs = ps.executeQuery();
+		rs.next();
+		return rs.getString(1);
 	}
 	
 	/***
