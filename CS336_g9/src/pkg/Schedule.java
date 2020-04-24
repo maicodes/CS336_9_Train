@@ -51,7 +51,7 @@ public class Schedule extends HttpServlet {
 			if (destination.equals("Aberdeen- Matawan")) destination = "Aberdeen-Matawan";
 			
 			try {
-				request.setAttribute("trains", get_trains(transit_line_for_stations(origin, destination)));
+				request.setAttribute("trains", get_trains(lib.transit_line_for_stations(origin, destination)));
 				request.setAttribute("forward-run", forward_run(origin, destination));
 				request.setAttribute("origin", origin);
 				request.setAttribute("destination", destination);
@@ -235,7 +235,8 @@ public class Schedule extends HttpServlet {
 				"AND t.t_id = s.train_id " + 
 				"AND st.station_name = ? " + 
 				"GROUP BY transitLine_Name) " + 
-				"GROUP BY station_name";
+				"GROUP BY station_name " +
+				"ORDER BY st2.station_name ASC";
 		PreparedStatement ps = c.prepareStatement(SQL);
 		ps.setString(1, origin);
 		ps.setString(2, origin);
@@ -247,52 +248,7 @@ public class Schedule extends HttpServlet {
 		return stations;
 	}
 	
-	private String transit_line_for_stations(String origin, String destination) throws SQLException
-	{
-		String SQL = "SELECT DISTINCT station_name, Trains.transitLine_Name " + 
-				"FROM Stops " + 
-				"JOIN Stations " + 
-				"ON Stops.station_id = Stations.station_id " + 
-				"JOIN Trains " + 
-				"ON Trains.t_id = Stops.train_id " + 
-				"WHERE station_name = ? OR station_name = ?;";
-		PreparedStatement ps = c.prepareStatement(SQL);
-		ps.setString(1, origin);
-		ps.setString(2, destination);
-		
-		ResultSet rs = ps.executeQuery();
-		ArrayList<String> potential_lines = new ArrayList<String>();
-		String line;
-		
-		while (rs.next())
-		{
-			if (potential_lines.contains(rs.getString("transitLine_Name")))
-			{
-				line = rs.getString("transitLine_Name");
-				return line;
-			}
-			else
-			{
-				potential_lines.add(rs.getString("transitLine_Name"));
-			}
-		}
-		
-		String fallback = "SELECT DISTINCT Trains.transitLine_Name " + 
-				"FROM Trains " + 
-				"JOIN Stops " + 
-				"ON Stops.train_id = Trains.t_id " + 
-				"JOIN Stations " + 
-				"ON Stations.station_id = Stops.station_id " + 
-				"WHERE station_name = ?";
-		
-		ps = c.prepareStatement(fallback);
-		ps.setString(1, origin);
-		rs = ps.executeQuery();
-		rs.next();
-		return rs.getString(1);
-	}
-	
-	private boolean forward_run(String origin, String destination) throws SQLException
+	public boolean forward_run(String origin, String destination) throws SQLException
 	{
 		String SQL = "SELECT DISTINCT position " + 
 				"FROM Stops " + 
