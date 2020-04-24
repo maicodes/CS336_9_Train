@@ -16,6 +16,10 @@
 
 <h1>Train Schedule</h1>
 <%
+
+	if (!Auth.isLoggedIn(request)) {
+		response.sendRedirect("auth.jsp");
+	}
 	if (request.getAttribute("transit_line_names") == null)
 	{
 			/* out.print("<p>An error has occured fetching the available Transit Lines. Please " + 
@@ -94,7 +98,7 @@ if (dep_arr != 0)
 </form>
 <hr>
 <h2>Forward Path</h2>
-	<table border = 1 style = "white-space: nowrap;" class = "table table-striped">
+	<table border = 1 style = "white-space: nowrap;" class = "table table-striped table-responsive">
 		<thead class = "thead-dark">
 			<tr>
 				<th>Train</th>
@@ -140,13 +144,13 @@ if (dep_arr != 0)
 			%>
 		</tbody>
 	</table>
-	
-<%
+	<%
 	base = "05:00";
-	titlePointer = trains.get(0).get_trips().get(0);
-%>
+	titlePointer = trains.get(1).get_trips().get(0);
+	%>
+
 <h2>Return Path</h2>
-	<table border = 1 style = "white-space: nowrap;" class = "table table-striped">
+	<table border = 1 style = "white-space: nowrap;" class = "table table-striped table-responsive">
 		<thead class = "thead-dark">
 			<tr>
 				<th>Train</th>
@@ -256,76 +260,8 @@ if (request.getParameter("origin") != null && request.getParameter("destination"
 	</thead>
 	<tbody>
 <%
-	//My brain is a little slow right now so rather than do this in MySQL I'm just going to process the fetched data
-	@SuppressWarnings("unchecked")
-	ArrayList<Train> trains = (ArrayList<Train>) request.getAttribute("trains");
-	ArrayList<StationTrain>entries = new ArrayList<StationTrain>();
-	//First we should determine if it is a forward trip or a return trip
-	//Let's make that function now and pass it along to the new servlet
-	boolean forward_run = (Boolean) request.getAttribute("forward-run");
-	//Okay now that we did that... we should do a nested loop through all the trains and where they stop and filter accordingly
-	for (Train t : trains)
-	{
-		for (Stop s : t.get_trips())
-		{
-			//Hmmm.. how should we filter
-			//If we're doing a forward run, we have to search for origin but make sure destination doesn't appear first
-			//Why don't we just check if position of stop 2 > position stop 1?
-			if (forward_run)
-			{
-			if (s.get_position() < s.get_nextStop().get_position())
-			{
-				StationTrain st = new StationTrain();
-				while (s != null)
-				{
-					if (s.get_station_name().equals(origin)) {
-						st.setId(t.getT_id());
-						st.setDep(lib.addTime(s.get_arrive_time(), 2));
-						st.setOrigin(s.get_stop_id());
-					}
-					if (s.get_station_name().equals(destination))
-					{
-						st.setArr(s.get_arrive_time());
-						st.setDest(s.get_stop_id());
-					}
-					s = s.get_nextStop();
-				}
-				entries.add(st);
-			}
-			}
-			else
-			{
-				if (s.get_position() > s.get_nextStop().get_position())
-				{
-					StationTrain st = new StationTrain();
-					while (s != null)
-					{
-						if (s.get_station_name().equals(origin)) {
-							st.setId(t.getT_id());
-							st.setDep(lib.addTime(s.get_arrive_time(), 2));
-							st.setOrigin(s.get_stop_id());
-						}
-						if (s.get_station_name().equals(destination))
-						{
-							st.setArr(s.get_arrive_time());
-							st.setDest(s.get_stop_id());
-						}
-						s = s.get_nextStop();
-					}
-					entries.add(st);
-				}
-			}
-		//Great, everythings out of order...
-		//Maybe we should save everything into custom objects and re order everything through custom designed sort
-		//Time spent thinking overhead > time spent doing everything lazy way
-		
-		//Now since everything's in the array list... gotta come up with a sort method
-		}
-	}
-	
-	entries = lib.sortTime(entries);
-	
-	for (StationTrain st : entries) {
+	ArrayList<StationTrain> sch = StationTrain.list(origin, destination);
+	for (StationTrain st : sch) {
 %>
 		<tr>
 			<td><%=st.getId() %></td>
@@ -357,9 +293,9 @@ if (request.getParameter("origin") != null && request.getParameter("destination"
 	<input type = "submit">
 </form>
 <%
-	String base_url = "index.jsp?";
+	String base_url = "Ticket";
 %>
-<form action = "<%=base_url%>">
+	<form action = "<%=base_url%>" method = "post">
 		<input type = "hidden" name = "origin" value = "<%= (String) request.getParameter("origin") %>">
 		<input type = "hidden" name = "destination" value = "<%= (String) request.getParameter("destination")%>">
 		<button>Buy a ticket for this route</button>

@@ -41,6 +41,9 @@
       <li class = "nav-item">
       	<a class = "nav-link" href = "Schedule">Schedules</a>
       </li>
+      <li class = "nav-item">
+      	<a class = "nav-link" href = "Schedule?line=all">Make a Reservation</a>
+      </li>
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Dropdown
