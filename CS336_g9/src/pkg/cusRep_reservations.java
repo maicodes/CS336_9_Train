@@ -55,20 +55,20 @@ public class cusRep_reservations extends HttpServlet {
 			Map<String, String[]> params = req.getParameterMap();
 			
 			// get fees
-			Map<String, Double> fees = Common.getFees(null, params.get("origin-stop")[0], con);
+//			Map<String, Double> fees = Common.getFees(null, params.get("origin-stop")[0], con);
 			
 			// get weekly/ monthly discount if it is a weekly/monthly fare
-			double otherDiscount = 0.0;
-			if (params.get("fare")[0].equals("weekly") || params.get("fare")[0].equals("monthly")) {
-				otherDiscount = Common.getMonthlyWeeklyDiscount(fees.get("fareID").intValue(), params.get("fare")[0].equals("weekly"), con) ;
-			}
-			
-			
-			// Calculates total fare and total discount
-			double totalFare = fees.get("farePrice") + fees.get("bookingFee");
-			double totalDiscount = 0.0;
-			
-			if()
+//			double otherDiscount = 0.0;
+//			if (params.get("fare")[0].equals("weekly") || params.get("fare")[0].equals("monthly")) {
+//				otherDiscount = Common.getMonthlyWeeklyDiscount(fees.get("fareID").intValue(), params.get("fare")[0].equals("weekly"), con) ;
+//			}
+//			
+//			
+//			// Calculates total fare and total discount
+//			double totalFare = fees.get("farePrice") + fees.get("bookingFee");
+//			double totalDiscount = 0.0;
+//			
+//			if()
 			
 			
 			

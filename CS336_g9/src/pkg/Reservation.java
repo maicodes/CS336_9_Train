@@ -261,9 +261,9 @@ public class Reservation extends HttpServlet {
 		
 		else if (action.equals("finish")) {
 			String SQL_Reservations = 
-			"INSERT INTO Reservations (rid, bookingFee, class, travelTime, totalFare, total_discount, originStop_id, "
+			"INSERT INTO Reservations (bookingFee, class, travelTime, totalFare, total_discount, originStop_id, "
 			+ "destinationStop_id, is_round_trip, isWeekly, isMonthly)"
-			+ " VALUES (?,?,?,?,?,?,?,?,?,?,?)";
+			+ " VALUES (?,?,?,?,?,?,?,?,?,?)";
 			
 			String SQL_Bookings = 
 			"INSERT INTO Bookings (date, userName, rid) "
@@ -274,7 +274,7 @@ public class Reservation extends HttpServlet {
 			try {
 				String userName = Auth.getLoginUser().getUserName();
 				
-				String rid = get_next_rid();
+				// String rid = get_next_rid();
 				double bookingFee = Double.parseDouble( ((String)request.getParameter("booking_fee")).substring(1));
 				String ticket_class = (String) request.getParameter("ticket_class");
 				String fdate = (String) request.getParameter("fdate");
@@ -332,7 +332,7 @@ public class Reservation extends HttpServlet {
 						ps = c.prepareStatement(SQL_Reservations);
 						ps2 = c.prepareStatement(SQL_Bookings);
 						
-						rid = get_next_rid();
+						// rid = get_next_rid();
 						if (request.getParameter("rdate") != null)
 						{
 							
@@ -353,17 +353,17 @@ public class Reservation extends HttpServlet {
 						}
 						
 					}
-					ps.setString(1,rid);
-					ps.setDouble(2, bookingFee);
-					ps.setString(3, ticket_class);
-					ps.setInt(4, travelTime);
-					ps.setDouble(5, totalFare);
-					ps.setDouble(6, total_discount);
-					ps.setString(7, originStop_id);
-					ps.setString(8, destinationStop_id);
-					ps.setInt(9, round_trip);
-					ps.setInt(10, weekly);
-					ps.setInt(11, monthly);
+					// ps.setString(1,rid);
+					ps.setDouble(1, bookingFee);
+					ps.setString(2, ticket_class);
+					ps.setInt(3, travelTime);
+					ps.setDouble(4, totalFare);
+					ps.setDouble(5, total_discount);
+					ps.setString(6, originStop_id);
+					ps.setString(7, destinationStop_id);
+					ps.setInt(8, round_trip);
+					ps.setInt(9, weekly);
+					ps.setInt(10, monthly);
 					
 					insertSuccess = ps.executeUpdate();
 					if (insertSuccess == 0)
@@ -375,10 +375,10 @@ public class Reservation extends HttpServlet {
 						System.out.println("Something was added.");
 					}
 					
-					
+					int rid = get_next_rid();
 					ps2.setString(1, insertDate);
 					ps2.setString(2, userName);
-					ps2.setString(3, rid);
+					ps2.setInt(3, rid);
 					ps2.executeUpdate();
 					
 				}
@@ -393,19 +393,21 @@ public class Reservation extends HttpServlet {
 		}
 	}
 	
-	public String get_next_rid() throws SQLException {
+	
+	public int get_next_rid() throws SQLException {
 		String SQL = "SELECT rid FROM Reservations ORDER BY rid DESC LIMIT 1";
 		PreparedStatement ps = c.prepareStatement(SQL);
 		
 		ResultSet rs = ps.executeQuery();
-		
+		int suffix = 1;
 		if (rs.next())
 		{
-			String latestEntry = rs.getString(1);
-			int suffix = Integer.parseInt(latestEntry.substring(1, latestEntry.length()));
-			suffix++;
-			return "r" + suffix;
+//			String latestEntry = rs.getString(1);
+//			int suffix = Integer.parseInt(latestEntry.substring(1, latestEntry.length()));
+//			suffix++;
+//			return "r" + suffix;
+			suffix = rs.getInt(1);
 		}
-		return "r1";
+		return suffix;
 	}
 }
