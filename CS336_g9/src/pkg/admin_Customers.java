@@ -46,7 +46,6 @@ public class admin_Customers extends HttpServlet {
 		// TODO Auto-generated method stub
 		//doGet(request, response);
 		ApplicationDB ap = new ApplicationDB();
-		
 		Connection con = ap.getConnection();
 		
 		if(con == null) {
