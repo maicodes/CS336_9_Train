@@ -12,6 +12,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import pkg.Models.Fare;
 
@@ -272,7 +273,17 @@ public class Reservation extends HttpServlet {
 			
 			
 			try {
+				HttpSession session = request.getSession();
+				
+				
 				String userName = Auth.getLoginUser().getUserName();
+				String ssn = null;
+				
+				if (session.getAttribute("CusRep") != null) {
+					ssn = Common.getCusRepSSN( (String) session.getAttribute("CusRep"), c);
+					userName = session.getAttribute("cusUserName") == null ? userName : (String) session.getAttribute("cusUserName");
+				}
+					 
 				
 				// String rid = get_next_rid();
 				double bookingFee = Double.parseDouble( ((String)request.getParameter("booking_fee")).substring(1));
@@ -381,9 +392,29 @@ public class Reservation extends HttpServlet {
 					ps2.setInt(3, rid);
 					ps2.executeUpdate();
 					
+					// If the user is a customer representative => insert data to Orders table
+					if(session.getAttribute("CusRep") != null) {
+						String cusFirstName = session.getAttribute("cusFirstName") == null ? null : (String) session.getAttribute("cusFirstName");
+						String cusLastName = session.getAttribute("cusLastName") == null ? null : (String) session.getAttribute("cusLastName");
+						
+						String SQL_Orders = "INSERT INTO Orders (rep_ssn, userName, rid, cusFirstName, cusLastName) "
+								+ "VALUES (?, ?, ?, ?, ?)";
+						
+						if (ssn != null) {
+							PreparedStatement s = c.prepareStatement(SQL_Orders);
+							s.setString(1, ssn);
+							s.setString(2, userName);
+							s.setInt(3, rid);
+							s.setString(4, cusFirstName);
+							s.setString(5, cusLastName);
+							s.executeUpdate();
+							
+						} else {
+							System.out.println("ssn is null");
+						}
+					}
+					
 				}
-				
-				
 				
 			} catch (SQLException e) {
 				e.printStackTrace();

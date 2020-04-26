@@ -2,8 +2,13 @@
 /*@charset "ISO-8859-1";*/
 
 body, html {
+	height: 100%;
 	margin: 0;
 	padding: 0;
+}
+
+form {
+	margin-top: 1em;
 }
 
 .auth {
@@ -26,6 +31,11 @@ body, html {
 .hide {
 	display: none;
 }
+
+.nav-link .active {
+	background-color: #e9ecef;
+}
+
 /*SUCCESS/ERROR BOX
 Ex. <div class = "error box"></div>
 */
@@ -56,7 +66,7 @@ Ex. <div class = "error box"></div>
 */
 
 #cusRep .row, #admin .row {
-	height: 100vh
+	height: 100vh;
 }
 
 .contentBox {
@@ -64,7 +74,7 @@ Ex. <div class = "error box"></div>
 } 
 
 .vertical-nav-con {
-	background-color: grey;
+	background-color: #495057;
 }
 
 .vertical-nav {
@@ -73,7 +83,7 @@ Ex. <div class = "error box"></div>
 	padding: 0;
 	text-align: center;
 	list-style: none;
-	height: 100%;
+	
 }
 
 a {

@@ -9,10 +9,10 @@
 <jsp:include page = "header.jsp"></jsp:include>
 <jsp:include page = "navigation.jsp"></jsp:include>
 <% Common lib = new Common(); %>
-<%-- <%
+<%--
 	if (!Auth.isLoggedIn())
 	response.sendRedirect("index.jsp");
-%> --%>
+--%>
 
 <h1>Train Schedule</h1>
 <%

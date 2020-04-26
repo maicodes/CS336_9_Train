@@ -76,7 +76,6 @@ document.addEventListener("DOMContentLoaded",  function() {
     	registerForm.classList.remove("hide");
     	error.classList.add("hide");}, false);
    
-    
   }, false);
 
 });

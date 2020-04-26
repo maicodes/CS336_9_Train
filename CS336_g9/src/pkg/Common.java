@@ -6,6 +6,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.sql.Array;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -18,6 +19,7 @@ import java.time.Duration;
 import java.time.LocalTime;
 import java.time.Year;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
@@ -381,68 +383,15 @@ public class Common {
 		return true;
 	}
 	
-	/**
-	 * Note: provide either transit line name or stopId 
-	 * Returns the booking fee, fare price, fare id, children/senior/disable discounts of a transit line from a given stopID or transit line name 
-	 * @param transitLine : transit line name
-	 * @param con : connection from ApplicationDB.getConnection() 
-	 * @return returns Map<String, Double> on success, otherwise returns null
-	 * 			key names: bookingFee, farePrice, fareID, childrenDiscount, seniorDiscount, disabledDiscount
-	 */
-	public static Map<String, Double> getFees(String transitLine, String stopId, Connection con) {
-		
-		if (!StringIsNotEmpty(transitLine)) {
-			// get transit line name from a given stop_id
-			String query= "SELECT t.transitLine_Name transitLine "
-					+ "FROM Trains t, Stops s "
-					+ "WHERE t.t_id = s.train_id AND s.stop_id = " +  "\"" + stopId + "\"";
-			try {
-				Statement s = con.createStatement();
-				ResultSet rs = s.executeQuery(query);
-				
-				if(rs.next()) {
-					transitLine = rs.getString("transitLine");
-				} else {
-					System.out.println("Cannot retrieve transit line name from the given stop id");
-					return null;
-				}
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		
-		Map<String, Double> results = new HashMap<String, Double>();
-		String bookingFeeQuery  = "SELECT bookingFee FROM Transit_Lines WHERE name = " + "\"" + transitLine + "\"";
-		String fareQuery = "SELECT * FROM Fares WHERE transit_line = " + "\"" + transitLine + "\"";
+	public static String getCusRepSSN (String userName, Connection con) {
+		String query = "SELECT ssn FROM Employees WHERE userName = " + "\"" + userName + "\"";
+		Statement s;
 		try {
+			s = con.createStatement();
+			ResultSet rs = s.executeQuery(query);
 			
-			// get booking fee
-			Statement s = con.createStatement();
-			ResultSet rs = s.executeQuery(bookingFeeQuery);
-			
-			if(rs.next()) {
-				results.put("bookingFee", rs.getDouble("bookingFee"));
-			} else {
-				System.out.println("Cannot retrieve booking fee from the given transit line name");
-				return null;
-			}
-			
-			// get fare
-			rs= s.executeQuery(fareQuery);
-			
-			if (rs.next()) {
-				results.put("farePrice", rs.getDouble("price"));
-				results.put("fareID", rs.getDouble("fid"));
-				results.put("childrenDiscount",  rs.getDouble("children_discount"));
-				results.put("seniorDiscount",  rs.getDouble("senior_discount"));
-				results.put("disabledDiscount",  rs.getDouble("disabled_discount"));
-			}  else {
-				System.out.println("Cannot retrieve fare from the given transit line name");
-				return null;
-			}
-			
-			return results;
+			if(rs.next()) 
+				return rs.getString(1);
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -452,76 +401,16 @@ public class Common {
 		return null;
 	}
 	
-	
-	/**
-	 * Returns weekly or monthly fare discount from a given fare id
-	 * @param fareId : fare id
-	 * @param con : the connection from ApplicationDB.getConnection()
-	 * @param isWeekly : true if weekly fare and false if monthly fare
-	 * @return double on success, 0 on failure
-	 */
-	public static double getMonthlyWeeklyDiscount(int fareId, boolean isWeekly, Connection con) {
-		String col = isWeekly ? "weekly_discount" : "monthly_discount";
-		String table = isWeekly ? "Weekly_Fares" : "Monthly_Fares";
-		String query = "SELECT " + col 
-				+ " FROM " + table
-				+ " WHERE fid = " + "\"" + fareId + "\"";
-	
-		Statement s;
-		try {
-			s = con.createStatement();
-			ResultSet r = s.executeQuery(query);
+	public ArrayList<Integer> getTrainNumbers () throws SQLException { // get all train numbers 
+			PreparedStatement p = c.prepareStatement("SELECT DISTINCT t_id FROM Trains;");
+			ResultSet fetched_trains = p.executeQuery();
+			ArrayList<Integer> trains = new ArrayList<Integer>();
 			
-			if(r.next())
-				return r.getDouble(col);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		return 0;
-	}
-	
-	/**
-	 * Checks whether a user is a child, senior, or disabled.
-	 * @param userName
-	 * @return Map<String, Boolean> . Example: {"isChild": true; "isSenior": false; "isDisabled": false}
-	 */
-	public static Map<String, Boolean> validateDiscount(String userName, Connection con){
-		// Initializes result to false
-		Map<String, Boolean> res = new HashMap<String, Boolean>();
-		res.put("isChild", false);
-		res.put("isSenior", false);
-		res.put("isDisabled", false);
-		
-		// select user year of birth and isDisabled data
-		String query = "SELECT year(DOB) year, isDisabled "
-				+ "FROM Customers "
-				+ "WHERE userName = " + "\"" + userName + "\"";
-		
-		try {
-			Statement s = con.createStatement();
-			ResultSet rs = s.executeQuery(query);
-			
-			if (rs.next()) {
-				int year = rs.getInt(1);
-				boolean isDisabled = rs.getBoolean(2);
-				int currentYear = Year.now().getValue();
-				
-				if (currentYear - year <= 12)
-					res.replace("isChild", true);
-				else if (currentYear - year >= 60)
-					res.replace("isSenior", true);
-				
-				res.replace("isDisabled", isDisabled);
-				
+			while (fetched_trains.next())
+			{
+				trains.add(fetched_trains.getInt(1));
 			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		
-		return res;
+			
+		return trains;
 	}
 }

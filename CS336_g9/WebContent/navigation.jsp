@@ -1,4 +1,4 @@
-<%@ page import = "pkg.Auth" %>
+<%@ page import = "pkg.Auth, pkg.Common" %>
 <%@ page import = "pkg.Models.Customer" %>
 <%
 	Customer user = new Customer();
@@ -22,7 +22,7 @@
        <%
         	if (Auth.isLoggedIn(request))
         	{
-        		out.println(user.getFirstName() + " " + user.getLastName());
+        			out.println(user.getFirstName() + " " + user.getLastName());
         	}
         	else
         	{

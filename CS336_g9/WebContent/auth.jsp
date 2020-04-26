@@ -1,12 +1,12 @@
 <jsp:include page="header.jsp"/>
 <jsp:include page = "navigation.jsp"></jsp:include>
 <%@page import = "pkg.Auth" %>
-<%
+<%--
 	if (Auth.isLoggedIn(request))
 	{
 		response.sendRedirect("index.jsp");
 	}
-%>
+--%>
 
 <!-- Login Form -->
 <%
@@ -20,7 +20,8 @@ if (request.getParameter("try") != null)
 
 <div class="auth" id="login">
 	<div class="col-sm-8 col-md-4">
-		<form action="Auth" method="get" class="needs-validation" novalidate>
+		<form action="Auth" method="post" class="needs-validation" novalidate>
+			<input type="hidden" name="type" value="login">
     		<label for="login_userName" class="col-form-label">User Name</label>
       		<input type="text" name="userName" class="form-control" id="login_userName" placeholder="John Doe" required>
       			<div class="invalid-feedback">
@@ -50,7 +51,7 @@ if (request.getParameter("try") != null)
 	<div class="col-sm-8 col-md-4" >
 
 <form action="Auth" method="post" class="needs-validation" novalidate>
-  
+  	  <input type="hidden" name="type" value="register">
       <label for="firstName">First Name</label>
       <input type="text" name="ufirstName" class="form-control" id="firstName" placeholder="First name" required>
       <div class="invalid-feedback">

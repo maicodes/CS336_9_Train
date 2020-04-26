@@ -37,11 +37,20 @@ public class Auth extends HttpServlet {
     }
 
 	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#doGet(HttpServletrequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		//response.getWriter().append("Served at: ").append(request.getContextPath());
 		String page = "/index.jsp";
+		if (request.getParameter("action") != null)
+		{
+			if (request.getParameter("action").equals("logout"))
+			{
+				logout(request);
+				page = "/index.jsp";
+				response.sendRedirect(request.getContextPath() + page); 
+			}
+		}
 		
 		/*
 		
@@ -53,53 +62,7 @@ public class Auth extends HttpServlet {
 		 System.out.println("Parameter Name - "+paramName+", Value - "+request.getParameter(paramName));
 		}*/
 		
-		if (request.getParameter("action") != null)
-		{
-			if (request.getParameter("action").equals("logout"))
-			{
-				logout(request);
-				page = "/index.jsp";
-				response.sendRedirect(request.getContextPath() + page); 
-			}
-		}
-		else
-		{
-				//Get input from user from auth.jsp login
-				String userName = request.getParameter("userName");
-				String password = request.getParameter("password");
-				String userValidate = authenticateUser (userName, password);
-				
-				if( userValidate.contentEquals("Manager")) {
-					
-					// Create a new session
-					HttpSession session = request.getSession();
-					session.setAttribute("login", "T");
-					session.setAttribute("Manager", userName);
-					request.setAttribute("userName", userName);
-					request.getRequestDispatcher("/admin.jsp").forward(request, response);
-					
-				} else if (userValidate.contentEquals("CusRep")) {
-					
-					HttpSession session = request.getSession();
-					session.setAttribute("login", "T");
-					session.setAttribute("CusRep", userName);
-					request.setAttribute("userName", userName);
-					request.getRequestDispatcher("/cusRep.jsp").forward(request, response);
-					
-				} else if (userValidate.contentEquals("Customer")) {
-					
-					HttpSession session = request.getSession();
-					session.setAttribute("login", "T");
-					session.setAttribute("Customer", userName);
-					request.setAttribute("userName", userName);
-					request.getRequestDispatcher("/").forward(request, response);
-					
-				} else {
-					System.out.println(userValidate);
-					page = "/auth.jsp?try=fail";
-					response.sendRedirect(request.getContextPath() + page); 
-				}
-		}
+		
 				
 		/* // Previous code
 		ps.setString(1, inputUserName);
@@ -140,9 +103,9 @@ public class Auth extends HttpServlet {
 	}
 
 	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#doPost(HttpServletrequest request, HttpServletResponse response)
 	 */
-	protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse res) throws ServletException, IOException {
 		ApplicationDB ap = new ApplicationDB();
 		
 		Connection con = ap.getConnection();
@@ -152,53 +115,103 @@ public class Auth extends HttpServlet {
 			return;
 		}
 		
-		Customer newUser = new Customer();
-		String userName = req.getParameter("uname");
-		String password = req.getParameter("upassword");
-		
-		newUser.setFirstName(req.getParameter("ufirstName"));
-		newUser.setLastName(req.getParameter("ulastName"));
-		newUser.setUserName(userName);
-		newUser.setEmail(req.getParameter("uemail"));
-		newUser.setTelephone(req.getParameter("uphone"));
-		newUser.setAddress(req.getParameter("uaddress"));
-		newUser.setCity(req.getParameter("ucity"));
-		newUser.setState(req.getParameter("ustate"));
-		newUser.setZipcode(req.getParameter("uzip"));
-		newUser.setDOB(req.getParameter("DOB"));
-		
-		
-		try {
+		if(request.getParameter("type").equals("register")) {
+			Customer newUser = new Customer();
+			String userName = request.getParameter("uname");
+			String password = request.getParameter("upassword");
 			
-			// Create a new user 
-			PreparedStatement insertUsertatement = con.prepareStatement(insertUser);
-			insertUsertatement.setString(1, userName);
-			insertUsertatement.setString(2, password);
-			insertUsertatement.setString(3, "Customer");
-			insertUsertatement.executeUpdate();
+			newUser.setFirstName(request.getParameter("ufirstName"));
+			newUser.setLastName(request.getParameter("ulastName"));
+			newUser.setUserName(userName);
+			newUser.setEmail(request.getParameter("uemail"));
+			newUser.setTelephone(request.getParameter("uphone"));
+			newUser.setAddress(request.getParameter("uaddress"));
+			newUser.setCity(request.getParameter("ucity"));
+			newUser.setState(request.getParameter("ustate"));
+			newUser.setZipcode(request.getParameter("uzip"));
+			newUser.setDOB(request.getParameter("DOB"));
 			
-			// Create a new customer with the user name
-			PreparedStatement ps = con.prepareStatement(insertCustomer);
-			ps.setString(1, newUser.getFirstName());
-			ps.setString(2, newUser.getLastName());
-			ps.setString(3, newUser.getUserName());
-			ps.setString(4, newUser.getEmail());
-			ps.setString(5, newUser.getTelephone());
-			ps.setString(6, newUser.getAddress());
-			ps.setString(7, newUser.getCity());
-			ps.setString(8, newUser.getState());
-			ps.setString(9, newUser.getZipcode());
-			ps.setString(10, newUser.getDOB());
-			ps.executeUpdate();
 			
-			res.sendRedirect(req.getContextPath() + "/index.jsp?creation=success");
+			try {
+				
+				// Create a new user 
+				PreparedStatement insertUsertatement = con.prepareStatement(insertUser);
+				insertUsertatement.setString(1, userName);
+				insertUsertatement.setString(2, password);
+				insertUsertatement.setString(3, "Customer");
+				insertUsertatement.executeUpdate();
+				
+				// Create a new customer with the user name
+				PreparedStatement ps = con.prepareStatement(insertCustomer);
+				ps.setString(1, newUser.getFirstName());
+				ps.setString(2, newUser.getLastName());
+				ps.setString(3, newUser.getUserName());
+				ps.setString(4, newUser.getEmail());
+				ps.setString(5, newUser.getTelephone());
+				ps.setString(6, newUser.getAddress());
+				ps.setString(7, newUser.getCity());
+				ps.setString(8, newUser.getState());
+				ps.setString(9, newUser.getZipcode());
+				ps.setString(10, newUser.getDOB());
+				ps.executeUpdate();
+				
+				res.sendRedirect(request.getContextPath() + "/index.jsp?creation=success");
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} else {
+			String page = "/index.jsp";
+			if (request.getParameter("action") != null)
+			{
+				if (request.getParameter("action").equals("logout"))
+				{
+					logout(request);
+					page = "/index.jsp";
+					res.sendRedirect(request.getContextPath() + page); 
+				}
+			}
+			else
+			{
+					//Get input from user from auth.jsp login
+					String userName = request.getParameter("userName");
+					String password = request.getParameter("password");
+					String userValidate = authenticateUser (userName, password);
+					
+					if( userValidate.contentEquals("Manager")) {
+						
+						// Create a new session
+						HttpSession session = request.getSession();
+						session.setAttribute("login", "T");
+						session.setAttribute("Manager", userName);
+						request.setAttribute("userName", userName);
+						request.getRequestDispatcher("/admin.jsp").forward(request, res);
+						
+					} else if (userValidate.contentEquals("CusRep")) {
+						
+						HttpSession session = request.getSession();
+						session.setAttribute("login", "T");
+						session.setAttribute("CusRep", userName);
+						request.setAttribute("userName", userName);
+						request.getRequestDispatcher("/cusRep.jsp").forward(request, res);
+						
+					} else if (userValidate.contentEquals("Customer")) {
+						
+						HttpSession session = request.getSession();
+						session.setAttribute("login", "T");
+						session.setAttribute("Customer", userName);
+						request.setAttribute("userName", userName);
+						request.getRequestDispatcher("/").forward(request, res);
+						
+					} else {
+						System.out.println(userValidate);
+						page = "/auth.jsp?try=fail";
+						res.sendRedirect(request.getContextPath() + page); 
+					}
+			}
 			
-			ap.closeConnection(con);
-
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
+		ap.closeConnection(con);
 	}
 	
 	public static Customer getLoginUser() {
@@ -242,20 +255,26 @@ public class Auth extends HttpServlet {
 				String role = userInfo.getString("role");
 				
 				if (uPassword.contentEquals(password)) {
-					
-					if(role.contentEquals("Customer")) {
 						// Set loginUser
-						String customerQuery = "SELECT * FROM Customers WHERE userName = ?";
-						PreparedStatement customerQueryStatement = con.prepareStatement(customerQuery);
-						customerQueryStatement.setString(1, userName);
-						ResultSet rs = customerQueryStatement.executeQuery();
+						
+						String SQL = "";
+						
+						if (role.equals("Customer")) {
+							SQL = "SELECT * FROM Customers WHERE userName = ?";
+						} else {
+							SQL = "SELECT * FROM Employees WHERE userName = ?";
+						}
+						
+						PreparedStatement s = con.prepareStatement(SQL);
+						s.setString(1, userName);
+						ResultSet rs = s.executeQuery();
 						
 						if(rs.next()) {
 							loginUser.setUserName(userName);
 							loginUser.setFirstName(rs.getString("firstName")); 
 							loginUser.setLastName(rs.getString("lastName"));
 						}
-					}
+					
 					
 					return role;
 				}
