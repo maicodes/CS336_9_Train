@@ -10,7 +10,7 @@
 <% } %>
 <div style="color:blue">${ success }</div>
 <%if (isCustomer != null) { %>
-<div>Alerts:</div>
+<!-- <div>Alerts:</div>  -->
 <%} %>
 <div>
 	<img id="travelingImg"

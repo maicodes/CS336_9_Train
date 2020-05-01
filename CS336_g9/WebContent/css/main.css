@@ -52,6 +52,10 @@ Ex. <div class = "error box"></div>
 	background-color: #ff6666;
 }
 
+.info {
+	background-color: #1ecbe1;
+}
+
 [aria-hidden="true"] {
     display: none;
 }

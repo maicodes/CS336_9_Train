@@ -19,13 +19,15 @@ if (isCustomer == null)
 <meta charset="ISO-8859-1">
 </head>
 <body>
-	<form action="index.jsp" method="post">
+	<div class="container">
+		<form action="index.jsp" method="post">
 	<button type="submit" class="auth-btn btn btn-primary">back</button>
 	</form>
 	<form action="browseCustomer.jsp" method="get">
 	  <input type="text" name="search" size="50">
 	  <button type="submit" class="auth-btn btn btn-primary">search</button>
 	</form>
+	</div>
 </body>
 </html>
 
@@ -60,7 +62,8 @@ if (isCustomer == null)
 					
 		%>
 	<!-- Make an HTML table to show the results: -->
-		<table class="table table-striped">
+		<div class="container">
+			<table class="table table-striped">
 			  <thead class="thead-dark">
 			    <tr>
 			      <th scope="col">Question ID</th>
@@ -110,3 +113,5 @@ if (isCustomer == null)
 			%>
 		</tbody>
 		</table>
+		</div>
+		

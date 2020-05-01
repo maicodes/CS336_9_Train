@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
+import java.text.ParseException;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -43,7 +44,61 @@ public class Reservation extends HttpServlet {
 		String action = (String) request.getParameter("action");
 		DecimalFormat df = new DecimalFormat("$00.00");
 		
-		if (action.equals("checkout"))
+		if(request.getParameter("type").equals("cancel")) {
+			HttpSession session = request.getSession();
+			String userName = (String) session.getAttribute("Customer");
+			int resNum = Integer.parseInt(request.getParameter("res-num"));
+			String SQL_query = "SELECT rid FROM Bookings WHERE userName = ?  AND rid = ?";
+			try {
+				PreparedStatement ps = c.prepareStatement(SQL_query);
+				ps.setString(1, userName);
+				ps.setInt(2, resNum);
+				
+				ResultSet rs = ps.executeQuery();
+				
+				if (rs.next()) {
+//					SQL_query = "SELECT arrive_time " + 
+//							"FROM Stops " + 
+//							"WHERE stop_id = (" + 
+//							"SELECT originStop_id " + 
+//							"FROM Reservations " + 
+//							"WHERE rid = ?" + 
+//							")";
+//					PreparedStatement ps2 = c.prepareStatement(SQL_query);
+//					ps2.setInt(1, resNum);
+//					
+//					ResultSet rs2 = ps2.executeQuery();
+//					
+//					if (rs2.next()) {
+//						String departureDate = rs2.getString(1);
+//						String today = lib.getToday();
+//						
+//						try {
+//							if (lib.greaterThanDate(departureDate, today)) {
+								String SQL_delete = "DELETE FROM Reservations WHERE rid = ?";
+								PreparedStatement cancelStatement = c.prepareStatement(SQL_delete);
+								cancelStatement.setInt(1, resNum);
+								cancelStatement.executeUpdate();
+								session.setAttribute("resCancelMessage", "Your reservation is canceled!");
+//							} else {
+//								session.setAttribute("resCancelMessage", "You are not allowed to cancel this reservation!");
+//							}
+//						} catch (ParseException e) {
+//							// TODO Auto-generated catch block
+//							e.printStackTrace();
+//						}
+//					}
+				} else {
+					session.setAttribute("resCancelMessage", "You are not allowed to cancel this reservation!");
+				}
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			response.sendRedirect(request.getContextPath() + "/reservations.jsp"); 
+		}
+		else if (action.equals("checkout"))
 		{
 			String line = (String) request.getParameter("line");
 			try {

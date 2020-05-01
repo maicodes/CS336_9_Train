@@ -20,6 +20,7 @@ if (isManager == null && isCR == null)
 <meta charset="ISO-8859-1">
 </head>
 <body>
+	<div class="container">
 	<form action="index.jsp" method="post">
 	<button type="submit" class="auth-btn btn btn-primary">back</button>
 	</form>
@@ -27,6 +28,8 @@ if (isManager == null && isCR == null)
 	  <input type="text" name="search" size="50">
 	  <button type="submit" class="auth-btn btn btn-primary">search</button>
 	</form>
+	</div>
+	
 </body>
 </html>
 
@@ -61,6 +64,7 @@ if (isManager == null && isCR == null)
 					
 		%>
 	<!-- Make an HTML table to show the results: -->
+		<div class="container">
 		<table class="table table-striped">
 			  <thead class="thead-dark">
 			    <tr>
@@ -118,3 +122,5 @@ if (isManager == null && isCR == null)
 			%>
 		</tbody>
 		</table>
+		</div>
+		
