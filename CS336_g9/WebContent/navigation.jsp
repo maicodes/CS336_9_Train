@@ -44,26 +44,35 @@
         <% } %>
       </li>
       <li class = "nav-item">
-      <% if (isCustomer != null) {%>
-        	<a class = "nav-link" href = "messages.jsp">Contact us</a>
-        <% } else { %>
-        	<a class = "nav-link" href="browseCusRep.jsp">Messages</a>
-        <% } %>
-      </li>
-      <li class = "nav-item">
-      <% if (isCustomer != null) {%>
-        	<a class = "nav-link" href = "browseCustomer.jsp">Browse messages</a>
-        <% } %>
-      </li>
-      <li class = "nav-item">
       	<a class = "nav-link" href = "Schedule">Schedules</a>
       </li>
-      <li class = "nav-item">
-      	<a class = "nav-link" href = "Schedule?line=all">Make a Reservation</a>
-      </li>
-      <li class = "nav-item">
-      	<a class = "nav-link" href = "reservations.jsp">View Reservations</a>
-      </li>
+      <% if (isCustomer != null) {%>
+     		<li class = "nav-item">
+        		<a class = "nav-link" href = "messages.jsp">Contact us</a>
+        	</li>
+        	<li class = "nav-item">
+        		<a class = "nav-link" href = "browseCustomer.jsp">Browse messages</a>
+      		</li>
+      		<li class = "nav-item">
+		      	<a class = "nav-link" href = "Schedule?line=all">Make a Reservation</a>
+		    </li>
+		    <li class = "nav-item">
+		      	<a class = "nav-link" href = "reservations.jsp">View Reservations</a>
+		    </li>
+        <% } else if (isCR != null){ %>
+        	<li class = "nav-item">
+		      	<a class = "nav-link" href="browseCusRep.jsp">Messages</a>
+		    </li>
+        	<li class = "nav-item">
+		      	<a class = "nav-link" href="cusRep.jsp">Customer Representative Page</a>
+		    </li>
+        <% } else if (isManager != null) { %>
+        	<li class = "nav-item">
+		      	<a class = "nav-link" href="admin.jsp">Manager Page</a>
+		    </li>
+        <%}%>
+      
+     
     <!-- 
     <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
