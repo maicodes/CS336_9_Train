@@ -378,7 +378,7 @@ public class Common {
 	 * @return
 	 */
 	public static boolean StringIsNotEmpty (String s) {
-		if (s == null || s.isBlank())
+		if (s == null || s.isEmpty())
 			return false;
 		return true;
 	}
