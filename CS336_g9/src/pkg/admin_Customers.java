@@ -89,8 +89,6 @@ public class admin_Customers extends HttpServlet {
 				ps.executeUpdate();
 				
 				res.sendRedirect(req.getContextPath() + "/admin.jsp#adminCus");
-				ap.closeConnection(con);
-
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -201,6 +199,7 @@ public class admin_Customers extends HttpServlet {
 				}	
 			}
 			
+			res.sendRedirect(req.getContextPath() + "/admin.jsp#adminCus");
 		} else {
 			try {
 				PreparedStatement ps = con.prepareStatement(delete);
@@ -208,13 +207,12 @@ public class admin_Customers extends HttpServlet {
 
 				ps.executeUpdate();
 				res.sendRedirect(req.getContextPath() + "/admin.jsp");
-				ap.closeConnection(con);
-
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
+		ap.closeConnection(con);
 	}
 	
 //	private static String createEditStatement(String tableName, ArrayList<String> columns, ArrayList<String> values, String condition) {
