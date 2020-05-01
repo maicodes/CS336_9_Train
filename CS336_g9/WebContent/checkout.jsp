@@ -85,7 +85,7 @@
 						<b>Total Travel Time</b>
 					</div>
 					<div class = "col">
-						<%= ((Integer) request.getAttribute("total_time")).toString() + " minutes" %>
+						<%= (Math.abs((Integer) request.getAttribute("total_time"))) + " minutes" %>
 					</div>
 				</div>
 				<div class = "row">

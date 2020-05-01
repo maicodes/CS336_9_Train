@@ -74,8 +74,13 @@ public class admin_salesReports extends HttpServlet {
 			and day(date)= 28 ;
 			*/
 			
-			String query = "SELECT * FROM Reservations "
-					+ "WHERE year(date) = ? AND month(date) = ?;";
+			String query = "SELECT * " + 
+					"FROM Reservations r " + 
+					"WHERE r.rid IN ( " + 
+					"	SELECT rid " + 
+					"    FROM Bookings " + 
+					"    WHERE year(date) = ? AND month(date) = ? " + 
+					")";
 			
 			
 			PreparedStatement ps = con.prepareStatement(query);
@@ -91,7 +96,7 @@ public class admin_salesReports extends HttpServlet {
 					"</head>" + 
 					"<body>");
 			
-			out.print("<h3>Sales reports in month: " + month + "</h3><br>");
+			out.print("<h3>Sales reports in month " + month + " and year " + year + "</h3><br>");
 			out.print("<table class=\"table table-striped\">");
 			
 			ResultSetMetaData rsmd = rs.getMetaData();
@@ -109,19 +114,19 @@ public class admin_salesReports extends HttpServlet {
 			out.print("<tbody>");
 			
 			double totalFare = 0.0;
-			int totalBookingFee = 0;
-			int totalDiscount = 0;
+			double totalBookingFee = 0;
+			double totalDiscount = 0;
 			
 			while(rs.next()) {
 				out.print("<tr>");
 				for(int i = 1; i <= numCols; i++) {
 					
 					if(rsmd.getColumnName(i).contentEquals("bookingFee"))
-						totalBookingFee += Integer.parseInt(rs.getString(i));
+						totalBookingFee += Double.parseDouble(rs.getString(i));
 					else if(rsmd.getColumnName(i).contentEquals("totalFare"))
 						totalFare += Double.parseDouble(rs.getString(i));
 					else if(rsmd.getColumnName(i).contentEquals("total_discount"))
-						totalDiscount += Integer.parseInt(rs.getString(i));
+						totalDiscount += Double.parseDouble(rs.getString(i));
 					
 					out.print("<td>");
 					out.print(rs.getString(i));
@@ -133,7 +138,7 @@ public class admin_salesReports extends HttpServlet {
 			
 			out.print("</table>");
 			
-			out.print("<br><h6>Total Fares: $" + totalFare + "</h6><h6>Total Discount: $" + totalDiscount + "</h6><h6>Total Booking Fee: $" + totalBookingFee + "</h6><h6>Total Revenue: " + totalFare + totalBookingFee +"</h6>");
+			out.print("<br><h6>Total Fares: $" + totalFare + "</h6><h6>Total Discount: $" + totalDiscount + "</h6><h6>Total Booking Fee: $" + totalBookingFee + "</h6><h6>Total Revenue: " + (totalFare + totalBookingFee) +"</h6>");
 			
 			out.print("</body></html>");
 			

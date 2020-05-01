@@ -57,14 +57,26 @@ public class admin_revenue extends HttpServlet {
 		if (req.getParameter("type").equals("bestCustomer")) {
 			try {
 				// This is the query statement to query the best customer who generated the highest booking fee and fares combined
-				String query = "SELECT x.userName \"Customer User Name\", c.firstName \"Customer First Name\", c.lastName \"Customer Last Name\", max(totalBookingFee + totalFare) Revenue " + 
-						"from (" + 
-						"select userName, sum(bookingFee) totalBookingFee, sum(totalFare) totalFare " + 
-						"from Bookings b " + 
-						"JOIN Reservations r " + 
-						"ON b.rid = r.rid " + 
-						"group by userName) x, Customers c " + 
-						"where x.userName = c.userName;";
+				String query = "SELECT c.userName, c.firstName, c.lastName, t1.TotalRevenue " + 
+						"From (SELECT userName, sum(revenue.Revenue) \"TotalRevenue\" " + 
+						"FROM ( " + 
+						"	SELECT rid, (totalFare + bookingFee) \"Revenue\" " + 
+						"	FROM Reservations) revenue " + 
+						"JOIN " + 
+						"Bookings b " + 
+						"ON b.rid = revenue.rid " + 
+						"GROUP BY userName) t1, " + 
+						"Customers c " + 
+						"WHERE t1.userName = c.userName AND t1.TotalRevenue >= ALL ( " + 
+						"SELECT sum(revenue.Revenue) \"TotalRevenue\" " + 
+						"FROM ( " + 
+						"	SELECT rid, (totalFare + bookingFee) \"Revenue\" " + 
+						"	FROM Reservations) revenue " + 
+						"JOIN " + 
+						"Bookings b " + 
+						"ON b.rid = revenue.rid " + 
+						"GROUP BY userName " + 
+						")";
 		
 				Statement sm = con.createStatement();
 				ResultSet rs = sm.executeQuery(query);
@@ -154,7 +166,7 @@ public class admin_revenue extends HttpServlet {
 		 * */
 		else if (req.getParameter("type").equals("revByCus")) {
 			try {
-				String query = "SELECT t1.userName \"User Name\", c.firstName \"First Name\", c.lastName \"Last Name\", sum(t1.bookingFee) \"Total Booking Fee\", sum(t1.totalFare) \"Total Fare\", (sum(t1.bookingFee) + sum(t1.totalFare)) \"Total Revenue\" " + 
+				String query = "SELECT t1.userName \"User Name\", c.firstName \"First Name\", c.lastName \"Last Name\", sum(t1.bookingFee) \"Total Booking Fee\", sum(t1.totalFare) \"Total Fare\",(sum(t1.bookingFee) + sum(t1.totalFare)) \"Total Revenue\" " + 
 						"FROM " + 
 						"	(SELECT b.userName, r.bookingFee, r.totalFare" + 
 						"	FROM Reservations r, Bookings b " +
