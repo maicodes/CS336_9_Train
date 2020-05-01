@@ -3,6 +3,7 @@
 <%@ page import="pkg.*"%>
 <%@ page import="java.io.*,java.util.*,java.sql.*"%>
 <%@ page import="javax.servlet.http.*,javax.servlet.*" %>
+<jsp:include page="header.jsp"/>
 <!DOCTYPE html>
 <html>
 <head>
@@ -11,6 +12,7 @@
 </head>
 <body>
 <div style="color:red">${ error }</div>
+<div><form action="index.jsp" method="post"><button type="submit" class="auth-btn btn btn-primary">Back</button></form></div>
 <h1>Contact us</h1>
 	<form action="submitMessage" method="post">
 	  <label for="username">Username:</label><br><br>

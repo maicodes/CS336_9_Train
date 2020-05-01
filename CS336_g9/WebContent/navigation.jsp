@@ -6,6 +6,11 @@
 	{
 		user = Auth.getLoginUser();
 	}
+	
+	Object isCustomer = request.getSession(false).getAttribute("Customer");
+	Object isManager = request.getSession(false).getAttribute("Manager");
+	Object isCR = request.getSession(false).getAttribute("CusRep");
+	
 %>
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -36,6 +41,18 @@
         	<a class="nav-link" href="auth.jsp">Log In</a>
         <% } else { %>
         	<a class = "nav-link" href="Auth?action=logout">Log Out</a>
+        <% } %>
+      </li>
+      <li class = "nav-item">
+      <% if (isCustomer != null) {%>
+        	<a class = "nav-link" href = "messages.jsp">Contact us</a>
+        <% } else { %>
+        	<a class = "nav-link" href="browseCusRep.jsp">Messages</a>
+        <% } %>
+      </li>
+      <li class = "nav-item">
+      <% if (isCustomer != null) {%>
+        	<a class = "nav-link" href = "browseCustomer.jsp">Browse messages</a>
         <% } %>
       </li>
       <li class = "nav-item">

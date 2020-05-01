@@ -14,6 +14,7 @@ if((request.getSession(false).getAttribute("Manager")== null) )
 	<div class="row">
 	<div class="col-2 vertical-nav-con">
 	<ul class="vertical-nav" data-active="#adminEmp">
+		<li class="vertical-nav-item"><a href="index.jsp" class="toggle-btn btn btn-outline-light">Home</a></li>
 		<li class="vertical-nav-item"><a href="#adminEmp" class="toggle-btn btn btn-outline-light">Manage Employees</a></li>
 		<li class="vertical-nav-item"><a href="#adminCus" class="toggle-btn btn btn-outline-light">Manage Customers</a> </li>
 		<li class="vertical-nav-item"><a href="#adminSaleReports" class="toggle-btn btn btn-outline-light">Manage Sales Reports</a></li>

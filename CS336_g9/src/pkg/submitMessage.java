@@ -48,12 +48,14 @@ public class submitMessage extends HttpServlet {
 			stmt.setString(3, m);
 			stmt.executeUpdate();
 			
-			response.sendRedirect(request.getContextPath() + "/");
+			request.setAttribute("success", "Thank you for your message. One of our representatives will respond as soon as possible.");
+			request.getRequestDispatcher("index.jsp").forward(request, response);
+			//response.sendRedirect(request.getContextPath() + "/");
 			ap.closeConnection(con);
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
-			request.setAttribute("error", "Unsuccessful request. Please try again later.");
+			request.setAttribute("error", "Unsuccessful request. Check whether username is valid.");
 			request.getRequestDispatcher("messages.jsp").forward(request, response);
 			
 		}

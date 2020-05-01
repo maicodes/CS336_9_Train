@@ -23,6 +23,7 @@ if((request.getSession(false).getAttribute("CusRep")== null) )
 	
 			<div class = "col-sm-12 col-md-2 vertical-nav-con" id = "cusRepNav">
 				<ul class="vertical-nav" data-active="#cusRepRes">
+					<li class="vertical-nav-item"><a href="index.jsp" class="toggle-btn btn btn-outline-light">Home</a></li>
 					<li class="vertical-nav-item"><a href="#cusRepRes" class="toggle-btn btn btn-outline-light">Manage Reservations</a></li>
 					<li class="vertical-nav-item"><a href="#cusRepSche" class="toggle-btn btn btn-outline-light">List of Schedules</a></li>
 					<li class="vertical-nav-item"><a href="#cusRepCus" class="toggle-btn btn btn-outline-light">List of Customers</a></li>
