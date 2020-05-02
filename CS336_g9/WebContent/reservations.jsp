@@ -18,7 +18,7 @@ if (session.getAttribute("resCancelMessage") != null)
 {
 	String mess = (String) session.getAttribute("resCancelMessage");
 %>
-<div class = "info box" id = "badLogin"> <%= mess %> </div>
+<div class = "info box"> <%= mess %> </div>
 
 <% } %>
 
@@ -60,6 +60,13 @@ if (session.getAttribute("resCancelMessage") != null)
 		ps.setString(2, userName);
 		
 		ResultSet rs = ps.executeQuery();
+		
+		// Get date from Bookings 
+		String SQL_dates = "SELECT rid, date FROM Bookings WHERE userName = ?";
+		PreparedStatement ps2 = con.prepareStatement(SQL_dates);
+		ps2.setString(1, userName);
+		
+		ResultSet rs2 = ps2.executeQuery();
 	%> 
 	<div class="container mt-5">
 		<h3>List of all reservations:</h3>
@@ -83,10 +90,39 @@ if (session.getAttribute("resCancelMessage") != null)
 			  <tbody>
 		<%
 			while (rs.next()){
+				rs2.next();
+				
 				out.print("<tr>");
 				
+				String rid = rs.getString("Reservation Number");
+				String departTime = rs.getString("Departure Time");
+				String rid2 = rs2.getString("rid");
+				String departTime2 = rs2.getString("date");
+			
+				if (rid.equals(rid2)){
+					String time1 = lib.stripTime(departTime);
+					String time2 = lib.stripTime(departTime2);
+					if(!time1.equals(time2)){
+						out.print("<div class='error box'> Your reservation " + rid + " has changed the departure time from " + time2 + " to " + time1 + "</div>");
+						%>
+						<!--
+							<input type="hidden" id = "resRid001" value="<%= rid %>">
+							<input type="hidden" id = "resTime1" value="<%= time1 %>">
+							<input type="hidden" id = "resTime2" value="<%= time2 %>">
+							<script>
+								const rid = document.querySelector("#resRid001");
+								const time1 = document.querySelector("#resTime1");
+								const time2 = document.querySelector("#resTime2");
+								alert("Your reservation " + rid.value + " has changed the departure time from " + time2.value + " to " + time1);
+							</script>
+						  -->
+							
+						<% 
+					}
+				}
+				
 				out.print("<td>");
-				out.print(rs.getString("Reservation Number"));
+				out.print(rid);
 				out.print("</td>");
 				
 				out.print("<td>");
@@ -97,8 +133,9 @@ if (session.getAttribute("resCancelMessage") != null)
 				out.print(rs.getString("Origin Station ID"));
 				out.print("</td>");
 				
+				
 				out.print("<td>");
-				out.print(rs.getString("Departure Time"));
+				out.print(departTime);
 				out.print("</td>");
 				
 				out.print("<td>");

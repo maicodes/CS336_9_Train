@@ -475,7 +475,7 @@ public class Reservation extends HttpServlet {
 				e.printStackTrace();
 				System.out.println("Time to enter debug mode....");
 			}
-			
+			response.sendRedirect(request.getContextPath() + "/reservations.jsp"); 
 		}
 	}
 	

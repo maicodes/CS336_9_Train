@@ -233,7 +233,6 @@ if((request.getSession(false).getAttribute("CusRep")== null) )
 				
 				<div class="container" id="cusRepSche" aria-hidden = "true">
 				<br><br>
-					<h3>This function is not available.</h3>
 					<div class="container">
 						<div class="container">
 							<form action="/CS336_g9/Schedule?line=all" method="get">
