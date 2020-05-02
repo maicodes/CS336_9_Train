@@ -166,7 +166,7 @@ public class admin_Employees extends HttpServlet {
 			Statement statement;
 			try {
 				statement = con.createStatement();
-				String query = "SELECT userName FROM Employees WHERE ssn = " + ssn;
+				String query = "SELECT userName FROM Employees WHERE ssn = \"" + ssn + "\"";
 				ResultSet rs = statement.executeQuery(query);
 				
 				if(rs.next())

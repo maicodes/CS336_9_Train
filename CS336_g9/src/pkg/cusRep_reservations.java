@@ -127,14 +127,14 @@ public class cusRep_reservations extends HttpServlet {
 				PreparedStatement ps = con.prepareStatement(update);
 				
 				ps.setDouble(1, Double.parseDouble(req.getParameter("fee")));
-				ps.setString(2, req.getParameter("class"));
+				ps.setString(2, req.getParameter("class").trim());
 				ps.setInt(3, Integer.parseInt(req.getParameter("travel-time")));
 				ps.setDouble(4, Double.parseDouble(req.getParameter("total-fare")));
 				ps.setDouble(5, Double.parseDouble(req.getParameter("total-discount")));
 				ps.setString(6, req.getParameter("origin-stop"));
 				ps.setString(7, req.getParameter("des-stop"));
 				
-				String tripType= req.getParameter("trip");
+				String tripType= req.getParameter("trip").trim();
 				
 				if (tripType.equals("One-Way")) {
 					ps.setInt(8, 0);

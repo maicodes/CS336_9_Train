@@ -104,7 +104,7 @@ public class admin_revenue extends HttpServlet {
 									"WHERE r.originStop_id = s.stop_id) t1, Trains t " + 
 								"WHERE t.t_id = t1.train_id) train_transitLine " + 
 								"GROUP BY train_transitLine.transitLine) t2 " + 
-						"ORDER BY \"Total Number of Reservations\" DESC " + 
+						"ORDER BY count(*) DESC" + 
 						"LIMIT 5;";
 				Statement sm = con.createStatement();
 				ResultSet rs = sm.executeQuery(query);

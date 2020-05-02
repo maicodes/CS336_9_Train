@@ -87,8 +87,6 @@ public class admin_Customers extends HttpServlet {
 				ps.setString(9, zip);
 				ps.setString(10, dob);
 				ps.executeUpdate();
-				
-				res.sendRedirect(req.getContextPath() + "/admin.jsp#adminCus");
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -174,7 +172,7 @@ public class admin_Customers extends HttpServlet {
 			}
 			
 			if (Common.StringIsNotEmpty(zip)) {
-				columns.add("zip");
+				columns.add("zipcode");
 				values.add(zip);
 			}
 			
@@ -192,26 +190,24 @@ public class admin_Customers extends HttpServlet {
 				try {
 					Statement sm = con.createStatement();
 					sm.executeUpdate(editStatement);
-					res.sendRedirect(req.getContextPath() + "/admin.jsp");
 					ap.closeConnection(con);
 				} catch(SQLException e) {
 					e.printStackTrace();
 				}	
 			}
 			
-			res.sendRedirect(req.getContextPath() + "/admin.jsp#adminCus");
+			
 		} else {
 			try {
 				PreparedStatement ps = con.prepareStatement(delete);
 				ps.setString(1, req.getParameter("uname"));
-
 				ps.executeUpdate();
-				res.sendRedirect(req.getContextPath() + "/admin.jsp");
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
+		res.sendRedirect(req.getContextPath() + "/admin.jsp#adminCus");
 		ap.closeConnection(con);
 	}
 	
